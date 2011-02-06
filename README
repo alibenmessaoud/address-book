@@ -1,0 +1,9 @@
+GUI addresss book with SQLite back end.
+
+Written in C++.
+
+The application will let you store contact info for people in a database.
+
+Goal of the project is to get familiar with GUI framework and SQLite API.
+
+
