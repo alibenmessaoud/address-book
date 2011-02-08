@@ -70,4 +70,40 @@ Implementation Details
         The back end code will be encapsulated to hide the details of the storage operations
         allowing for replacement of the back end with a different solution while maintaining
         the same interface to the core application code.
-        
+       Presentation Logic
+    -Create UI elements
+    -Add elements to main window layout
+
+Application Logic
+    -Validate input
+    -Make reqeuests to Data Model based on values entered in UI (Presentation Logic)
+
+Data Model Logic
+    -Manage database connection
+    -Retrieve raw rows of data from the database and return data object
+    -Package raw database fields into data object
+
+
+
+What interfaces do each of these layers provide to one another?
+
+    Data Model
+        connect/open - establishes connection to the underlying data storage
+        system, be it flat file, database, network server, etc...  This would
+        have to happen at the very start of execution and raise a program ending
+        error if a connection to the data source could not be established. This
+        operation could occur automatically upon creation of the data source
+        object, in the constructor.
+
+        getContacts - retrieve data from the data source and return a usable
+        data object.  Data will need to be able to be retrieved by a variety of
+        search criteria (name, phone number, etc...).  There's probably a more
+        elegant solution to that than simply having a bunch of differen
+        methods depending on what you want to search by (i.e. getContactByName,
+        getContactByPhoneNumber, getContactByAddress, etc...)
+
+        addContact -
+
+        updateContact -
+
+        deleteContact  
