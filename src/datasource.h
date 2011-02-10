@@ -15,6 +15,7 @@ class DataSource
 
     public:
         virtual Contact getContact(int id) = 0;
+        virtual ContactRecordSet getAllContacts() = 0;
         virtual bool addContact(const Contact& c) = 0;
         virtual bool updateContact(int id, const Contact& c) = 0;
         virtual bool deleteContact(int id)=0;
