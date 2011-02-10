@@ -12,6 +12,7 @@
 
 
 #include <string>
+#include <vector>
 
 class Contact 
 {
@@ -23,6 +24,8 @@ class Contact
         std::string email;
 
 };
+
+typedef std::vector<Contact> ContactRecordSet;
 
 
 #endif

@@ -1,42 +1,60 @@
 //dummydatasource.cpp
 //Implementation of dummy data source class
 
+#include <string>
+#include <sstream>
 #include "dummydatasource.h"
 #include "contact.h"
 
 DummyDataSource::DummyDataSource()
 {
-    data.firstName = "John";
-    data.lastName = "Doe";
-    data.phoneNumber = "(555)555-5555";
-    data.address = "123 1st Street";
-    data.email = "j.doe@abc.def";
+    std::stringstream ss;
+    std::string temp;
+    Contact c;
+    
+    for(int i=0; i < NUM_CONTACTS; i++)
+    {
+        ss << i; 
+        temp = ss.str();
+        c.firstName = temp;
+        c.lastName = temp;
+        c.phoneNumber = temp;
+        c.address = temp;
+        c.email = temp;
+    
+        recordList.push_back(c); 
+        ss.str("");
+    }
+        
 }
 
 
 Contact DummyDataSource::getContact(int id)
 {
-    return data;
+    return recordList[id-1];
+}
+
+ContactRecordSet DummyDataSource::getAllContacts()
+{
+    return recordList;
 }
 
 bool DummyDataSource::addContact(const Contact& c)
 {
-    data.firstName = c.firstName;
-    data.lastName = c.lastName;
-    data.phoneNumber = c.phoneNumber;
-    data.address = c.address;
-    data.email = c.email;
-
+    recordList.push_back(c);
     return true;
 }
 
 bool DummyDataSource::updateContact(int id, const Contact& c)
 {
-    addContact(c);
+    recordList[id-1] = c;
+    return true;
 }
+
 
 bool DummyDataSource::deleteContact(int id)
 {
+    recordList.erase(recordList.begin()+ (id-1));
     return true;
 }
 
