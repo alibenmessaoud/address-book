@@ -8,6 +8,7 @@
 #define NUM_CONTACTS 5
 
 #include <vector>
+#include <memory>
 #include "datasource.h"
 #include "contact.h"
 
@@ -21,11 +22,12 @@ class DummyDataSource : DataSource
         DummyDataSource();  
         ~DummyDataSource() { };
         
-        virtual Contact getContact(int id);
-        virtual ContactRecordSet getAllContacts();
+        virtual std::auto_ptr<Contact> getContact(int id);
+        virtual std::auto_ptr<ContactRecordSet> getAllContacts();
         virtual bool addContact(const Contact& c);
         virtual bool updateContact(int id, const Contact& c);
         virtual bool deleteContact(int id);
+        virtual void deleteAllContacts(void);
 };
 
 #endif
