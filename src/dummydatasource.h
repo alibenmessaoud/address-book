@@ -14,7 +14,7 @@
 
 
 
-class DummyDataSource : DataSource
+class DummyDataSource : public DataSource
 {
     private:
         std::vector<Contact> recordList;
