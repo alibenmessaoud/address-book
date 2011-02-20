@@ -16,18 +16,20 @@
 
 class DummyDataSource : public DataSource
 {
-    private:
-        std::vector<Contact> recordList;
     public:
-        DummyDataSource();  
-        ~DummyDataSource() { };
-        
-        virtual std::auto_ptr<Contact> getContact(int id);
-        virtual std::auto_ptr<ContactRecordSet> getAllContacts();
+        //Data access services 
+        virtual bool getContact(int id, Contact &c);
+        virtual bool getAllContacts(ContactRecordSet &rs);
         virtual bool addContact(const Contact& c);
         virtual bool updateContact(int id, const Contact& c);
         virtual bool deleteContact(int id);
-        virtual void deleteAllContacts(void);
+        virtual bool deleteAllContacts(void);
+
+        DummyDataSource();  
+        ~DummyDataSource() { };
+
+    private:
+        std::vector<Contact> recordList;
 };
 
 #endif

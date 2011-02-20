@@ -30,36 +30,49 @@ DummyDataSource::DummyDataSource()
         
 }
 
-std::auto_ptr<Contact> DummyDataSource::getContact(int id)
+bool DummyDataSource::getContact(int id, Contact &c)
 {
+    //Currently this will never return false because the dummy data
+    //source is a vector contained in the class
+    //In a real data source backed by a database or file this 
+    //would return false if the file could not be opened or the
+    //database could not be reached
 
+    //Does not return false for record not found, returns true
+    //but output pointer parameter is NULL
 
     //check if the item with this id exists
     try
     {
         //throws out of range exception if object does not exist
-        Contact *c = new Contact(recordList.at(id-1));
-        std::auto_ptr<Contact> ret(c);
-        return ret;
+        c = Contact(recordList.at(id-1));
+        return true;
     }
     catch(std::out_of_range &err)
     {
         //no item found, return null auto_ptr 
-        return std::auto_ptr<Contact>();
+        c =  Contact();
+        return true;
     }
 
+    
 }
 
-std::auto_ptr<ContactRecordSet> DummyDataSource::getAllContacts()
+bool DummyDataSource::getAllContacts(ContactRecordSet &rs)
 {
+    //Never returns false in this dummy class
+    //Would return false in a real datasource if file could not be
+    //opened or database could not be reached for example
+
     if(recordList.empty())
     {
-        return std::auto_ptr<ContactRecordSet>();
+        rs = ContactRecordSet();
+        return true;
     }
     else
     {
-        return std::auto_ptr<ContactRecordSet>(
-                                new ContactRecordSet(recordList));
+         rs = ContactRecordSet(recordList);
+        return true;
     }
 }
 
@@ -103,8 +116,9 @@ bool DummyDataSource::deleteContact(int id)
 
 }
 
-void DummyDataSource::deleteAllContacts(void)
+bool DummyDataSource::deleteAllContacts(void)
 {
     recordList.clear();    
+    return true;
 }
 

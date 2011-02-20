@@ -22,7 +22,8 @@ class Contact
         std::string phoneNumber;
         std::string address;
         std::string email;
-
+        bool isValidToAdd(void) const;
+        bool isEmpty(void) const;
 };
 
 typedef std::vector<Contact> ContactRecordSet;

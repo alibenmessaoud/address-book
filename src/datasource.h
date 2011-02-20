@@ -12,18 +12,17 @@
 
 class DataSource
 {
-    private:
 
     public:
-        virtual std::auto_ptr<Contact> getContact(int id) = 0;
-        virtual std::auto_ptr<ContactRecordSet> getAllContacts() = 0;
+        //Data access services
+        virtual bool getContact(int id, Contact& c) = 0;
+        virtual bool getAllContacts(ContactRecordSet &rs) = 0;
         virtual bool addContact(const Contact& c) = 0;
         virtual bool updateContact(int id, const Contact& c) = 0;
         virtual bool deleteContact(int id)=0;
-        virtual void deleteAllContacts(void)=0;
+        virtual bool deleteAllContacts(void)=0;
+
         virtual ~DataSource() {};
-
-
 
 };
 
