@@ -17,16 +17,19 @@
 class Contact 
 {
     public:
+        typedef std::vector<Contact> ContactRecordSet;
+        typedef size_t ContactId;
+
         std::string firstName;
         std::string lastName;
         std::string phoneNumber;
         std::string address;
         std::string email;
+        ContactId id;
         bool isValidToAdd(void) const;
         bool isEmpty(void) const;
+        Contact():firstName(), lastName(), phoneNumber(), email(), id(0) { }
+
 };
-
-typedef std::vector<Contact> ContactRecordSet;
-
 
 #endif

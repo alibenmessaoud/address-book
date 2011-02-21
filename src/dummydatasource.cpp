@@ -16,7 +16,7 @@ DummyDataSource::DummyDataSource()
     
     for(int i=0; i < NUM_CONTACTS; i++)
     {
-        ss << i; 
+        ss << i+1; 
         temp = ss.str();
         c.firstName = temp;
         c.lastName = temp;
@@ -24,13 +24,13 @@ DummyDataSource::DummyDataSource()
         c.address = temp;
         c.email = temp;
     
-        recordList.push_back(c); 
+        addContact(c);
         ss.str("");
     }
         
 }
 
-bool DummyDataSource::getContact(int id, Contact &c)
+bool DummyDataSource::getContact(Contact::ContactId id, Contact &c)
 {
     //Currently this will never return false because the dummy data
     //source is a vector contained in the class
@@ -58,7 +58,7 @@ bool DummyDataSource::getContact(int id, Contact &c)
     
 }
 
-bool DummyDataSource::getAllContacts(ContactRecordSet &rs)
+bool DummyDataSource::getAllContacts(Contact::ContactRecordSet &rs)
 {
     //Never returns false in this dummy class
     //Would return false in a real datasource if file could not be
@@ -66,23 +66,25 @@ bool DummyDataSource::getAllContacts(ContactRecordSet &rs)
 
     if(recordList.empty())
     {
-        rs = ContactRecordSet();
+        rs = Contact::ContactRecordSet();
         return true;
     }
     else
     {
-         rs = ContactRecordSet(recordList);
+         rs = Contact::ContactRecordSet(recordList);
         return true;
     }
 }
 
 bool DummyDataSource::addContact(const Contact& c)
 {
-    recordList.push_back(c);
+    Contact contactToAdd = c;
+    contactToAdd.id = getNextId();
+    recordList.push_back(contactToAdd);
     return true;
 }
 
-bool DummyDataSource::updateContact(int id, const Contact& c)
+bool DummyDataSource::updateContact(Contact::ContactId id, const Contact& c)
 {
 
     try
@@ -97,9 +99,9 @@ bool DummyDataSource::updateContact(int id, const Contact& c)
     }
 }
 
-bool DummyDataSource::deleteContact(int id)
+bool DummyDataSource::deleteContact(Contact::ContactId id)
 {
-    ContactRecordSet::iterator it = recordList.begin() + (id-1);
+    Contact::ContactRecordSet::iterator it = recordList.begin() + (id-1);
 
     if(it >= recordList.end())
     {
@@ -122,3 +124,7 @@ bool DummyDataSource::deleteAllContacts(void)
     return true;
 }
 
+Contact::ContactId DummyDataSource::getNextId(void)
+{
+    return recordList.size() + 1;
+}

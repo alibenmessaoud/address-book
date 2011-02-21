@@ -18,18 +18,19 @@ class DummyDataSource : public DataSource
 {
     public:
         //Data access services 
-        virtual bool getContact(int id, Contact &c);
-        virtual bool getAllContacts(ContactRecordSet &rs);
+        virtual bool getContact(Contact::ContactId id, Contact &c);
+        virtual bool getAllContacts(Contact::ContactRecordSet &rs);
         virtual bool addContact(const Contact& c);
-        virtual bool updateContact(int id, const Contact& c);
-        virtual bool deleteContact(int id);
+        virtual bool updateContact(Contact::ContactId id, const Contact& c);
+        virtual bool deleteContact(Contact::ContactId id);
         virtual bool deleteAllContacts(void);
 
         DummyDataSource();  
         ~DummyDataSource() { };
 
     private:
-        std::vector<Contact> recordList;
+        Contact::ContactId getNextId(void);
+        Contact::ContactRecordSet recordList;
 };
 
 #endif

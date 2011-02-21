@@ -13,9 +13,9 @@ class AddressBookController
     public:
         //Interface to UI module
         ErrorInfo submitContact(const Contact &c);
-        ErrorInfo deleteContact(const Contact &c);
-        ErrorInfo getAllContacts(ContactRecordSet &rs);
-        ErrorInfo searchContacts(const Contact &c, ContactRecordSet &rs);
+        ErrorInfo deleteContact(Contact::ContactId id);
+        ErrorInfo getAllContacts(Contact::ContactRecordSet &rs);
+        ErrorInfo searchContacts(const Contact &c, Contact::ContactRecordSet &rs);
 
         //Assumes ownership of DataSource object passed in to constructor
         //Deleted when destructor of this object is run
