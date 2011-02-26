@@ -101,21 +101,21 @@ bool DummyDataSource::updateContact(Contact::ContactId id, const Contact& c)
 
 bool DummyDataSource::deleteContact(Contact::ContactId id)
 {
-    Contact::ContactRecordSet::iterator it = recordList.begin() + (id-1);
+    Contact::ContactRecordSet::iterator it;
 
-    if(it >= recordList.end())
+    for(it = recordList.begin(); it != recordList.end(); it++)
     {
-        //item does not exist, cannot delete
-        return false;
+        //id found
+        if(it->id == id)
+        {
+            recordList.erase(it);
+            return true;
+
+        }
     }
-    else
-    {
-        recordList.erase(it);
-        return true;
 
-    }
-
-
+    //item does not exist, cannot delete
+    return false;
 }
 
 bool DummyDataSource::deleteAllContacts(void)

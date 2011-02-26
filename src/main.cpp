@@ -73,7 +73,7 @@ void addInvalidContact(AddressBookController &book)
 
 }
 
-void deleteExistingContact(AddressBookController &book)
+void deleteAContact(AddressBookController &book, Contact::ContactId idToDelete)
 {
     std::cout << "Delete an existing contact" << std::endl;
     Contact::ContactRecordSet rs;
@@ -87,8 +87,6 @@ void deleteExistingContact(AddressBookController &book)
     
     if(!rs.empty())
     {
-        Contact::ContactId idToDelete = rs.size() - 1;
-        
         e = book.deleteContact(idToDelete);
         if(e.code != ERR_OK)
             printErrorDetails(e);
@@ -102,39 +100,6 @@ void deleteExistingContact(AddressBookController &book)
         return;
     }
 }
-
-
-
-void deleteNonExistentContact(AddressBookController &book)
-{
-    std::cout << "Delete a non existent contact" << std::endl;
-    Contact::ContactRecordSet rs;
-    ErrorInfo e = book.getAllContacts(rs);
-
-    if(e.code != ERR_OK)
-    {
-        printErrorDetails(e);
-        return;
-    }
-    
-    if(!rs.empty())
-    {
-        Contact::ContactId idToDelete = rs.size() + 1;
-        
-        e = book.deleteContact(idToDelete);
-        if(e.code != ERR_OK)
-            printErrorDetails(e);
-
-        return;
-    }
-    else
-    {
-        std::cout << "No records to delete, book is empty!" << std::endl;
-
-        return;
-    }
-}
-
 
 
 int main()
@@ -146,30 +111,16 @@ int main()
     
     printAllRecords(myBook);
 
-    addValidContact(myBook);
-    addValidContact(myBook);
+    //delete 2 contacts with non-contiguous ids
+    deleteAContact(myBook, 3);
     printAllRecords(myBook);
 
-    addInvalidContact(myBook);
+    deleteAContact(myBook, 1);
     printAllRecords(myBook);
 
-    deleteExistingContact(myBook);
+    //try to delete a contact with an id that doesn't exist
+    deleteAContact(myBook, 57);
     printAllRecords(myBook);
-
-    deleteNonExistentContact(myBook);
-    printAllRecords(myBook);
-
-    
-    std::cout << "Delete all the contacts in the data source" << std::endl;
-    dSrc->deleteAllContacts();
-
-    deleteExistingContact(myBook);
-    printAllRecords(myBook);
-
-    
-
-    
-
 
     return 0;
 }

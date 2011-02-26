@@ -18,7 +18,7 @@ class Contact
 {
     public:
         typedef std::vector<Contact> ContactRecordSet;
-        typedef size_t ContactId;
+        typedef unsigned int ContactId;
 
         std::string firstName;
         std::string lastName;
