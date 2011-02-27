@@ -122,5 +122,7 @@ int main()
     deleteAContact(myBook, 57);
     printAllRecords(myBook);
 
+
+
     return 0;
 }
