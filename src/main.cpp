@@ -4,6 +4,11 @@
 #include "contact.h"
 #include "errorinfo.h"
 
+#include <QApplication>
+#include "mainwindow.h"
+#include "contactlist.h"
+#include "contactdetailform.h"
+
 
 
 void printErrorDetails(const ErrorInfo &err)
@@ -102,27 +107,16 @@ void deleteAContact(AddressBookController &book, Contact::ContactId idToDelete)
 }
 
 
-int main()
+int main(int argc, char *argv[])
 {
-
-    DummyDataSource *dSrc = new DummyDataSource;  
+    DummyDataSource dSrc;  
     AddressBookController myBook(dSrc);
-    std::cout << std::endl; 
+
     
-    printAllRecords(myBook);
+    QApplication app(argc, argv);
+    MainWindow myApp(myBook);
+    myApp.show();
 
-    //delete 2 contacts with non-contiguous ids
-    deleteAContact(myBook, 3);
-    printAllRecords(myBook);
-
-    deleteAContact(myBook, 1);
-    printAllRecords(myBook);
-
-    //try to delete a contact with an id that doesn't exist
-    deleteAContact(myBook, 57);
-    printAllRecords(myBook);
-
-
-
-    return 0;
+    return app.exec();
 }
+

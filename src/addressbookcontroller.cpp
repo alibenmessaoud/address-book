@@ -1,7 +1,6 @@
 //addressbookcontroller.cpp
 
 #include "addressbookcontroller.h"
-
 #include "errorinfo.h"
 #include "contact.h"
 #include <memory>
@@ -14,7 +13,7 @@ ErrorInfo AddressBookController::submitContact(const Contact &c)
         return ErrorInfo(ERR_CONTACT_NOT_VALID, "Invalid Contact. Make sure all required fields are filled.");
     }
 
-    bool success = dataStore->addContact(c);
+    bool success = dataStore.addContact(c);
     if(success)
     {
         return ErrorInfo(ERR_OK, "OK");
@@ -27,7 +26,7 @@ ErrorInfo AddressBookController::submitContact(const Contact &c)
 
 ErrorInfo AddressBookController::deleteContact(Contact::ContactId id)
 {
-    if(dataStore->deleteContact(id))
+    if(dataStore.deleteContact(id))
         return ErrorInfo(ERR_OK, "OK");
     else
         return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could not delete contact");
@@ -36,7 +35,7 @@ ErrorInfo AddressBookController::deleteContact(Contact::ContactId id)
 ErrorInfo AddressBookController::getAllContacts(Contact::ContactRecordSet &rs)
 {
     
-    if(dataStore->getAllContacts(rs))  
+    if(dataStore.getAllContacts(rs))  
     {
         return ErrorInfo(ERR_OK, "OK");
     }

@@ -19,10 +19,10 @@ class AddressBookController
 
         //Assumes ownership of DataSource object passed in to constructor
         //Deleted when destructor of this object is run
-        explicit AddressBookController(DataSource *d) : dataStore(d) { }
+        explicit AddressBookController(DataSource &d) : dataStore(d) { }
         
     private:
-        std::auto_ptr<DataSource> dataStore; 
+        DataSource &dataStore; 
 };
 
 
