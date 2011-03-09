@@ -14,6 +14,7 @@ class AddressBookController
         //Interface to UI module
         ErrorInfo submitContact(const Contact &c);
         ErrorInfo deleteContact(Contact::ContactId id);
+        ErrorInfo getContact(Contact::ContactId id, Contact &c);
         ErrorInfo getAllContacts(Contact::ContactRecordSet &rs);
         ErrorInfo searchContacts(const Contact &c, Contact::ContactRecordSet &rs);
 

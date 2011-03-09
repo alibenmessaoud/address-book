@@ -29,8 +29,9 @@ class DummyDataSource : public DataSource
         ~DummyDataSource() { };
 
     private:
-        Contact::ContactId getNextId(void);
+        bool idExists(Contact::ContactId id, Contact::ContactRecordSet::iterator &pos);
         Contact::ContactRecordSet recordList;
+        Contact::ContactId nextId;
 };
 
 #endif

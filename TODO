@@ -1,1 +1,10 @@
-- Fix the deleteContact(Contact::ContactI id) implemenation for DummyDataSource.It's using the passed in id parameter as an iterator offset into the recordList vector.  This won't work correctly if a Contact has been deleted (i.e. the ids are no longer contiguous).  A contact's id does not necessarily equal it's index in the vector.  Now that Contacts are assigned an id as they're entered and these aren't reassigned when an item is deleted the deleteContact() method needs to first search for theContact with the given Id, figure out it's position in the vector and then delete it.
+
+*DONE*
+Fix the deleteContact(Contact::ContactI id) implemenation for DummyDataSource.It's using the passed in id parameter as an iterator offset into the recordList vector.  This won't work correctly if a Contact has been deleted (i.e. the ids are no longer contiguous).  A contact's id does not necessarily equal it's index in the vector.  Now that Contacts are assigned an id as they're entered and these aren't reassigned when an item is deleted the deleteContact() method needs to first search for theContact with the given Id, figure out it's position in the vector and then delete it.
+
+*DONE*
+Add a getContact(Contact::ContactId) method to the DataSource interface
+
+
+*DONE,CLICKING CONTACTS DISPLAYS THEIR INFO*
+Build working UI prototype, don't get bogged down in small stylistic details right now (i.e. sizeHint())

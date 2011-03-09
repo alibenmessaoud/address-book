@@ -10,6 +10,9 @@
 
 DummyDataSource::DummyDataSource()
 {
+
+    nextId = 1;
+
     std::stringstream ss;
     std::string temp;
     Contact c;
@@ -32,30 +35,18 @@ DummyDataSource::DummyDataSource()
 
 bool DummyDataSource::getContact(Contact::ContactId id, Contact &c)
 {
-    //Currently this will never return false because the dummy data
-    //source is a vector contained in the class
-    //In a real data source backed by a database or file this 
-    //would return false if the file could not be opened or the
-    //database could not be reached
-
-    //Does not return false for record not found, returns true
-    //but output pointer parameter is NULL
-
-    //check if the item with this id exists
-    try
-    {
-        //throws out of range exception if object does not exist
-        c = Contact(recordList.at(id-1));
-        return true;
-    }
-    catch(std::out_of_range &err)
-    {
-        //no item found, return null auto_ptr 
-        c =  Contact();
-        return true;
-    }
-
+    Contact::ContactRecordSet::iterator it;
     
+    if(idExists(id, it))
+    {
+        c = *it;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
 }
 
 bool DummyDataSource::getAllContacts(Contact::ContactRecordSet &rs)
@@ -79,20 +70,22 @@ bool DummyDataSource::getAllContacts(Contact::ContactRecordSet &rs)
 bool DummyDataSource::addContact(const Contact& c)
 {
     Contact contactToAdd = c;
-    contactToAdd.id = getNextId();
+    contactToAdd.id = nextId;
     recordList.push_back(contactToAdd);
+    nextId++;
     return true;
 }
 
 bool DummyDataSource::updateContact(Contact::ContactId id, const Contact& c)
 {
+    Contact::ContactRecordSet::iterator it;
 
-    try
+    if(idExists(id, it))
     {
-        recordList.at(id-1) = c;
+        *it = c;
         return true;
     }
-    catch(std::out_of_range &err)
+    else
     {
         //no item with that id
         return false;
@@ -101,21 +94,18 @@ bool DummyDataSource::updateContact(Contact::ContactId id, const Contact& c)
 
 bool DummyDataSource::deleteContact(Contact::ContactId id)
 {
-    Contact::ContactRecordSet::iterator it;
+    Contact::ContactRecordSet::iterator itemToDeletePosition;
 
-    for(it = recordList.begin(); it != recordList.end(); it++)
+    if(idExists(id, itemToDeletePosition))
     {
-        //id found
-        if(it->id == id)
-        {
-            recordList.erase(it);
-            return true;
-
-        }
+        recordList.erase(itemToDeletePosition);
+        return true;
     }
-
-    //item does not exist, cannot delete
-    return false;
+    else
+    {
+        //item does not exist, cannot delete
+        return false;
+    }
 }
 
 bool DummyDataSource::deleteAllContacts(void)
@@ -124,7 +114,23 @@ bool DummyDataSource::deleteAllContacts(void)
     return true;
 }
 
-Contact::ContactId DummyDataSource::getNextId(void)
+bool DummyDataSource::idExists(Contact::ContactId id, Contact::ContactRecordSet::iterator &pos)
 {
-    return recordList.size() + 1;
+    Contact::ContactRecordSet::iterator it;
+
+    for(it = recordList.begin(); it != recordList.end(); it++)
+    {
+        //id found
+        if(it->id == id)
+        {
+            pos = it;
+            return true;
+
+        }
+    }
+
+    //no item with that id exists
+    //if loop has run it's course then it == recordList.end()
+    pos = it;
+    return false;
 }

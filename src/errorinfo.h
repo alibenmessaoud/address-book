@@ -8,7 +8,8 @@ enum ErrorCode
 {
     ERR_OK,
     ERR_CONTACT_NOT_VALID,
-    ERR_UNKNOWN_ERROR
+    ERR_UNKNOWN_ERROR,
+    ERR_CONTACT_NOT_FOUND
 };
 
 class ErrorInfo
@@ -17,7 +18,8 @@ class ErrorInfo
         ErrorCode code;
         std::string msg;
 
-        ErrorInfo(ErrorCode code, std::string msg) : code(code), msg(msg) {} 
+        ErrorInfo() : code(ERR_OK), msg("") {};
+        ErrorInfo(ErrorCode code, std::string msg) : code(code), msg(msg) {};
 
 };
 #endif

@@ -3,6 +3,7 @@
 
 #include <QFrame>
 #include <QLabel>
+#include <QLineEdit>
 #include "contact.h"
 #include "addressbookcontroller.h"
 
@@ -14,8 +15,14 @@ class ContactDetailForm : public QFrame
         ContactDetailForm(AddressBookController &b, QWidget *parent=0);
 
     private:
-        AddressBookController &contactBook;
-        QLabel *outLabel;
+        void createFormWidgets(void);
+
+        AddressBookController &appController;
+        QLineEdit *nameField;
+        QLineEdit *addressField;
+        QLineEdit *phoneNumberField;
+        QLineEdit *emailField;
+        QLabel *errorMsg;
 
     private slots:
         void displayContact(Contact::ContactId id);

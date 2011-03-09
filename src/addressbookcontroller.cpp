@@ -24,6 +24,7 @@ ErrorInfo AddressBookController::submitContact(const Contact &c)
     }
 }
 
+
 ErrorInfo AddressBookController::deleteContact(Contact::ContactId id)
 {
     if(dataStore.deleteContact(id))
@@ -31,6 +32,23 @@ ErrorInfo AddressBookController::deleteContact(Contact::ContactId id)
     else
         return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could not delete contact");
 }
+
+
+ErrorInfo AddressBookController::getContact(Contact::ContactId id, Contact &c)
+{
+    if(dataStore.getContact(id, c))
+    {
+        return ErrorInfo(ERR_OK, "OK");
+    }
+    else
+    {
+        return ErrorInfo(ERR_CONTACT_NOT_FOUND, "No contact with that id was found");
+    }
+
+
+}
+
+
 
 ErrorInfo AddressBookController::getAllContacts(Contact::ContactRecordSet &rs)
 {
@@ -44,6 +62,7 @@ ErrorInfo AddressBookController::getAllContacts(Contact::ContactRecordSet &rs)
         return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could Not retrieve contacts.");
     }
 }
+
 
 ErrorInfo searchContacts(const Contact &c, Contact::ContactRecordSet &rs)
 {

@@ -112,7 +112,6 @@ int main(int argc, char *argv[])
     DummyDataSource dSrc;  
     AddressBookController myBook(dSrc);
 
-    
     QApplication app(argc, argv);
     MainWindow myApp(myBook);
     myApp.show();
