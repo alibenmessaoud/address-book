@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 #include <QFrame>
 
-#include "mainwindow.h"
+#include "qtmainwindow.h"
 #include "addressbookcontroller.h"
 #include "qtcontactlist.h"
 #include "qtcontactdetailform.h"
@@ -13,8 +13,7 @@
 
 QtMainWindow::QtMainWindow(AddressBookController &b, QWidget *parent, Qt::WindowFlags flags)
     : QMainWindow(parent, flags), addrBook(b)
-
-
+{
     QtContactList *list = new QtContactList(addrBook);
     list->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
@@ -38,4 +37,3 @@ QtMainWindow::QtMainWindow(AddressBookController &b, QWidget *parent, Qt::Window
     setMinimumSize(640,480);
 
 }
-

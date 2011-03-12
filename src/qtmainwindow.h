@@ -5,7 +5,7 @@
 #include "addressbookcontroller.h"
 
 /***********************************************************************
-    Class: MainWindow
+    Class: QtMainWindow
 
     Author: Phil Grohe
 
@@ -13,12 +13,12 @@
     their signals and slots.
 ***********************************************************************/
 
-class MainWindow : public QMainWindow
+class QtMainWindow : public QMainWindow
 {
     Q_OBJECT
 
     public:
-        MainWindow(AddressBookController &b, QWidget *parent=0, 
+        QtMainWindow(AddressBookController &b, QWidget *parent=0, 
                     Qt::WindowFlags flags=0);
 
     private:

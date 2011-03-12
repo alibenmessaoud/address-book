@@ -1,4 +1,4 @@
-#include "contactdetailform.h"
+#include "qtcontactdetailform.h"
 #include "errorinfo.h"
 
 #include <string>
@@ -6,13 +6,13 @@
 #include <QLineEdit>
 #include <QLabel>
 
-ContactDetailForm::ContactDetailForm(AddressBookController &b,
+QtContactDetailForm::QtContactDetailForm(AddressBookController &b,
     QWidget *parent) : QFrame(parent), appController(b)
 {
     createFormWidgets();
 }
 
-void ContactDetailForm::createFormWidgets(void)
+void QtContactDetailForm::createFormWidgets(void)
 {
     QFormLayout *layout = new QFormLayout(this);
     
@@ -32,7 +32,7 @@ void ContactDetailForm::createFormWidgets(void)
 }
 
 
-void ContactDetailForm::displayContact(Contact::ContactId id)
+void QtContactDetailForm::displayContact(Contact::ContactId id)
 {
     Contact c;
 

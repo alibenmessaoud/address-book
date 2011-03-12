@@ -1,5 +1,5 @@
-#ifndef UI_CONTACT_DETAIL_FORM
-#define UI_CONTACT_DETAIL_FORM
+#ifndef UI_QTCONTACTDETAIL_FORM
+#define UI_QTCONTACTDETAIL_FORM
 
 #include <QFrame>
 #include <QLabel>
@@ -8,22 +8,22 @@
 #include "addressbookcontroller.h"
 
 /***********************************************************************
-    Class: ContactDetailForm
+Class: QtContactDetailForm
 
-    Author: Phil Grohe
+Author: Phil Grohe
 
-    Qt widget for displaying all the fields of a Contact.
-    
-    Slot displayContact(Contact::ContactId id) receives the contact to
-    be displayed and 
+Qt widget for displaying all the fields of a Contact.
+
+Slot displayContact(Contact::ContactId id) receives the contact to
+be displayed and 
 ***********************************************************************/
 
-class ContactDetailForm : public QFrame
+class QtContactDetailForm : public QFrame
 {
     Q_OBJECT
 
     public:
-        ContactDetailForm(AddressBookController &b, QWidget *parent=0);
+        QtContactDetailForm(AddressBookController &b, QWidget *parent=0);
 
     private:
         void createFormWidgets(void);

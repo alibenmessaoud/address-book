@@ -7,7 +7,7 @@
 #include "contact.h"
 
 /***********************************************************************
-    Class: ContactList
+    Class: QtContactList
 
     Author: Phil Grohe
 
@@ -27,12 +27,12 @@ If an item is added or deleted from the addressbook, what happens?
 
 */
 
-class ContactList : public QListWidget
+class QtContactList : public QListWidget
 {
     Q_OBJECT
 
     public:
-        ContactList(AddressBookController &book, QWidget *parent=0); 
+        QtContactList(AddressBookController &book, QWidget *parent=0); 
 
 
     signals:

@@ -1,7 +1,7 @@
 
 #include "addressbookcontroller.h"
 #include "contact.h"
-#include "contactlist.h"
+#include "qtcontactlist.h"
 
 #include <string>
 
@@ -16,7 +16,7 @@ Populate List
         Create a new entry on the list with those name combined
 */
 
-ContactList::ContactList(AddressBookController &book, QWidget *parent) : 
+QtContactList::QtContactList(AddressBookController &book, QWidget *parent) : 
     QListWidget(parent) 
 {
     setSelectionMode(QAbstractItemView::SingleSelection);
@@ -27,7 +27,7 @@ ContactList::ContactList(AddressBookController &book, QWidget *parent) :
 
 }
 
-void ContactList::populateList(AddressBookController &book)
+void QtContactList::populateList(AddressBookController &book)
 {
 
     Contact::ContactRecordSet allContacts;
@@ -46,7 +46,7 @@ void ContactList::populateList(AddressBookController &book)
     } 
 }        
 
-void ContactList::dispatchListItemContactId(QListWidgetItem *item)
+void QtContactList::dispatchListItemContactId(QListWidgetItem *item)
 {
     Contact::ContactId selectedItemId = item->data(Qt::UserRole).toUInt();
 
