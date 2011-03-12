@@ -1,18 +1,24 @@
-#ifndef DUMMYDATASOURCE_H
-#define DUMMYDATASOURCE_H
+#ifndef DATASTORAGE_DUMMYDATASOURCE_H
+#define DATASTORAGE_DUMMYDATASOURCE_H
 
-//dummydatasource.h
-//A mock/dummy class that implements the DataSource interface
-
-
-#define NUM_CONTACTS 5
-
-#include <vector>
-#include <memory>
 #include "datasource.h"
 #include "contact.h"
 
 
+const int NUM_CONTACTS = 5;
+
+/************************************************************
+    Class: DummyDataSource
+
+    Author: Phil Grohe
+
+    Mock object implementing the DataSource interface.
+    Creates a vector with dummy data when created.
+    DataSource interface methods act on this data rather
+    than any kind of persistently stored data. Used as a 
+    placeholder until DataSource implementations providing
+    true persistence are written (flat file, SQL, etc...)
+************************************************************/
 
 class DummyDataSource : public DataSource
 {
@@ -30,6 +36,7 @@ class DummyDataSource : public DataSource
 
     private:
         bool idExists(Contact::ContactId id, Contact::ContactRecordSet::iterator &pos);
+
         Contact::ContactRecordSet recordList;
         Contact::ContactId nextId;
 };

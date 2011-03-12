@@ -34,5 +34,6 @@ MainWindow::MainWindow(AddressBookController &b, QWidget *parent, Qt::WindowFlag
     mainWidget->setLayout(mainLayout);
 
     setCentralWidget(mainWidget);
+    setMinimumSize(640,480);
 
 }

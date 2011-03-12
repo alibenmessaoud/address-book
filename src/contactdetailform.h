@@ -7,6 +7,17 @@
 #include "contact.h"
 #include "addressbookcontroller.h"
 
+/***********************************************************************
+    Class: ContactDetailForm
+
+    Author: Phil Grohe
+
+    Qt widget for displaying all the fields of a Contact.
+    
+    Slot displayContact(Contact::ContactId id) receives the contact to
+    be displayed and 
+***********************************************************************/
+
 class ContactDetailForm : public QFrame
 {
     Q_OBJECT
@@ -26,8 +37,5 @@ class ContactDetailForm : public QFrame
 
     private slots:
         void displayContact(Contact::ContactId id);
-
-
-
 };
 #endif

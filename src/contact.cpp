@@ -1,13 +1,13 @@
-//contact.cpp
-
 #include "contact.h"
 
 bool Contact::isValidToAdd(void) const
 {
-    //Adding new contacts requires:
-    //-first name
-    //-last name
-    //-at least one contact method (phone or email)
+    /*
+    Adding a new contact requires:
+    -first name
+    -last name
+    -at least one contact method (phone or email)
+    */
 
     bool hasNames = !(firstName.empty() || lastName.empty());
     bool hasAContact = !(email.empty() && phoneNumber.empty());
@@ -24,7 +24,6 @@ bool Contact::isValidToAdd(void) const
 
 bool Contact::isEmpty(void) const
 {
-    //To search a contact, it must not be completely empty
     if(firstName.empty() && 
         lastName.empty() &&
         phoneNumber.empty() && 

@@ -1,15 +1,14 @@
-#ifndef CONTACT_H
-#define CONTACT_H
+#ifndef CORE_CONTACT_H
+#define CORE_CONTACT_H
 
-//contact.h
-//All the information of any given contact in the address book
-//grouped into one class
+/************************************************************
+    Class: Contact
 
-//No methods, equivalent to a struct
+    Author: Phil Grohe
 
-//TODO
-//Still very early prototyping code. This might all be refactored.
-
+    Data structure to hold a single address book contact's
+    info.
+************************************************************/
 
 #include <string>
 #include <vector>
@@ -17,18 +16,20 @@
 class Contact 
 {
     public:
+
         typedef std::vector<Contact> ContactRecordSet;
         typedef unsigned int ContactId;
 
+        ContactId id;
         std::string firstName;
         std::string lastName;
         std::string phoneNumber;
         std::string address;
         std::string email;
-        ContactId id;
+
+        Contact():id(0), firstName(), lastName(), phoneNumber(), email(){ }
         bool isValidToAdd(void) const;
         bool isEmpty(void) const;
-        Contact():firstName(), lastName(), phoneNumber(), email(), id(0) { }
 
 };
 

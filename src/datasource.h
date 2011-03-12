@@ -1,20 +1,25 @@
-#ifndef DATASOURCE_H
-#define DATASOURCE_H
+#ifndef DATASTORAGE_DATASOURCE_H
+#define DATASTORAGE_DATASOURCE_H
 
-//datasource.h
-//Interface that different data sources sub-class
-
-
-//VERY preliminary design for interface for data source, will evolve
-
-#include <memory>
 #include "contact.h"
 
+/***********************************************************************
+    Class: DataSource
+
+    Author: Phil Grohe
+
+    Interface class for the data storage back end of the addressbook.
+    Provides services for basic retrieval and updating of the contact 
+    list.
+
+    Different types of backend storage solutions (flat file, HTTP, SQL,
+    etc...) must implement this interface.
+***********************************************************************/
 class DataSource
 {
 
     public:
-        //Data access services
+
         virtual bool getContact(Contact::ContactId id, Contact& c) = 0;
         virtual bool getAllContacts(Contact::ContactRecordSet &rs) = 0;
         virtual bool addContact(const Contact& c) = 0;

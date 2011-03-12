@@ -1,20 +1,16 @@
-//addressbookcontroller.cpp
-
 #include "addressbookcontroller.h"
 #include "errorinfo.h"
 #include "contact.h"
-#include <memory>
 
 ErrorInfo AddressBookController::submitContact(const Contact &c)
 {    
-    //Validate contact, if not valid return validation fail error code
     if(!c.isValidToAdd())
     {
-        return ErrorInfo(ERR_CONTACT_NOT_VALID, "Invalid Contact. Make sure all required fields are filled.");
+        return ErrorInfo(ERR_CONTACT_NOT_VALID, "Invalid Contact. Make sure \
+                            all required fields are filled.");
     }
 
-    bool success = dataStore.addContact(c);
-    if(success)
+    if(dataStore.addContact(c))
     {
         return ErrorInfo(ERR_OK, "OK");
     }
@@ -49,7 +45,6 @@ ErrorInfo AddressBookController::getContact(Contact::ContactId id, Contact &c)
 }
 
 
-
 ErrorInfo AddressBookController::getAllContacts(Contact::ContactRecordSet &rs)
 {
     
@@ -61,11 +56,5 @@ ErrorInfo AddressBookController::getAllContacts(Contact::ContactRecordSet &rs)
     {
         return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could Not retrieve contacts.");
     }
-}
-
-
-ErrorInfo searchContacts(const Contact &c, Contact::ContactRecordSet &rs)
-{
-    return ErrorInfo(ERR_OK, "OK");
 }
 
