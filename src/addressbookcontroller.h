@@ -6,6 +6,8 @@
 #include "datasource.h"
 #include "errorinfo.h"
 
+
+class AddressBookUI;
 /************************************************************
     Class: AddressBookController
 
@@ -30,10 +32,13 @@ class AddressBookController
         //Stores reference to DataSource  abstract base class
         //allowing for different kinds of back end data storage
         //provided it implements the DataSource interface
-        explicit AddressBookController(DataSource &d) : dataStore(d) { }
+        explicit AddressBookController(DataSource &d);
+        ~AddressBookController();
         
     private:
         DataSource &dataStore; 
+        AddressBookUI *frontEnd;
+        
 };
 
 

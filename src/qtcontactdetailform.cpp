@@ -6,8 +6,8 @@
 #include <QLineEdit>
 #include <QLabel>
 
-QtContactDetailForm::QtContactDetailForm(AddressBookController &b,
-    QWidget *parent) : QFrame(parent), appController(b)
+QtContactDetailForm::QtContactDetailForm(AddressBookController &controller,
+    QWidget *parent) : QFrame(parent), appController(controller)
 {
     createFormWidgets();
 }
@@ -20,7 +20,14 @@ void QtContactDetailForm::createFormWidgets(void)
     addressField = new QLineEdit();
     phoneNumberField = new QLineEdit();
     emailField = new QLineEdit();
+    
 
+    
+    nameField->setReadOnly(true);
+    addressField->setReadOnly(true);
+    phoneNumberField->setReadOnly(true);
+    emailField->setReadOnly(true);
+    
     errorMsg = new QLabel("");
 
     layout->addRow("Name", nameField);

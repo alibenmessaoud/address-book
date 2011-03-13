@@ -1,6 +1,19 @@
 #include "addressbookcontroller.h"
+#include "qtaddressbookgui.h"
 #include "errorinfo.h"
 #include "contact.h"
+
+AddressBookController::AddressBookController(DataSource &d) : dataStore(d)
+{
+    frontEnd = new QtAddressBookGUI(*this);
+    frontEnd->show();
+}
+
+
+AddressBookController::~AddressBookController()
+{
+    delete frontEnd;
+}
 
 ErrorInfo AddressBookController::submitContact(const Contact &c)
 {    
@@ -12,6 +25,7 @@ ErrorInfo AddressBookController::submitContact(const Contact &c)
 
     if(dataStore.addContact(c))
     {
+        frontEnd->updateData();
         return ErrorInfo(ERR_OK, "OK");
     }
     else
@@ -24,9 +38,14 @@ ErrorInfo AddressBookController::submitContact(const Contact &c)
 ErrorInfo AddressBookController::deleteContact(Contact::ContactId id)
 {
     if(dataStore.deleteContact(id))
+    {
+        frontEnd->updateData();
         return ErrorInfo(ERR_OK, "OK");
+    }
     else
+    {
         return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could not delete contact");
+    }
 }
 
 

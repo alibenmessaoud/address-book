@@ -5,9 +5,11 @@
 #include "errorinfo.h"
 
 #include <QApplication>
-#include "mainwindow.h"
-#include "contactlist.h"
-#include "contactdetailform.h"
+#include "qtmainwindow.h"
+#include "qtcontactlist.h"
+#include "qtcontactdetailform.h"
+
+#include "qtaddressbookgui.h"
 
 
 
@@ -109,12 +111,11 @@ void deleteAContact(AddressBookController &book, Contact::ContactId idToDelete)
 
 int main(int argc, char *argv[])
 {
-    DummyDataSource dSrc;  
-    AddressBookController myBook(dSrc);
 
     QApplication app(argc, argv);
-    MainWindow myApp(myBook);
-    myApp.show();
+
+    DummyDataSource dSrc;  
+    AddressBookController myBook(dSrc);
 
     return app.exec();
 }

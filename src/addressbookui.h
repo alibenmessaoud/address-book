@@ -14,8 +14,8 @@ class AddressBookUI
 {
     public:
         
-        AddressBookUI(AddressBookController& controller);
-        virtual ~AddressBookUI();
+        AddressBookUI(AddressBookController &controller) : appController(controller) {};
+        virtual ~AddressBookUI() {};
 
         //Model has changed, update info in UI
         virtual bool updateData(void) = 0;
@@ -23,7 +23,7 @@ class AddressBookUI
         //Display the UI
         virtual bool show(void) = 0;
 
-    private:
+    protected:
         AddressBookController &appController;
 };
 

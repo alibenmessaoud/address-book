@@ -23,7 +23,7 @@ class QtContactDetailForm : public QFrame
     Q_OBJECT
 
     public:
-        QtContactDetailForm(AddressBookController &b, QWidget *parent=0);
+        QtContactDetailForm(AddressBookController &controller, QWidget *parent=0);
 
     private:
         void createFormWidgets(void);

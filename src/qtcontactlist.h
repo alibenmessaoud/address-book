@@ -32,17 +32,20 @@ class QtContactList : public QListWidget
     Q_OBJECT
 
     public:
-        QtContactList(AddressBookController &book, QWidget *parent=0); 
+        QtContactList(AddressBookController &controller, QWidget *parent=0); 
 
+    public slots:
+        void refreshList(void); 
 
     signals:
         void contactSelected(Contact::ContactId selectedId);
 
     private slots:
-        void dispatchListItemContactId(QListWidgetItem *item);
+        void dispatchListItemContactId(void);
+        void populateList(Contact::ContactId selected=0);
 
     private:
-        void populateList(AddressBookController &book);
+        AddressBookController &appController;
 }; 
 
 #endif
