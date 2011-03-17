@@ -1,10 +1,10 @@
-#ifndef DATASTORAGE_DATASOURCE_H
-#define DATASTORAGE_DATASOURCE_H
+#ifndef MODEL_ADDRESSBOOK_MODEL_H
+#define MODEL_ADDRESSBOOK_MODEL_H
 
 #include "contact.h"
 
 /***********************************************************************
-    Class: DataSource
+    Class: AddressBookModel
 
     Author: Phil Grohe
 
@@ -12,13 +12,21 @@
     Provides services for basic retrieval and updating of the contact 
     list.
 
-    Different types of backend storage solutions (flat file, HTTP, SQL,
-    etc...) must implement this interface.
+    This our Model class in an MVC architecture.  As such
+    it provides an interface to register/unregister/notify observers.
+    
+    Different types of backend storage solutions (flat file, SQL,
+    , web based API etc...) for the address book must implement this 
+    interface.
 ***********************************************************************/
-class DataSource
+class AddressBookModel
 {
 
     public:
+
+        virtual void registerView(AddressBookView *viewToRegister)=0;
+        virtual void removeView(AddressBookView *viewToRemove)=0;
+        virtual void notifyViews(void)=0;
 
         virtual bool getContact(Contact::ContactId id, Contact& c) = 0;
         virtual bool getAllContacts(Contact::ContactRecordSet &rs) = 0;
@@ -27,7 +35,7 @@ class DataSource
         virtual bool deleteContact(Contact::ContactId id)=0;
         virtual bool deleteAllContacts(void)=0;
 
-        virtual ~DataSource() {};
+        virtual ~AddressBookModel() {};
 
 };
 

@@ -1,7 +1,7 @@
 #include "qtaddressbookgui.h"
 #include "addressbookcontroller.h"
 
-QtAddressBookGUI::QtAddressBookGUI(AddressBookController & controller) : AddressBookUI(controller)
+QtAddressBookGUI::QtAddressBookGUI(AddressBookController & controller) : AddressBookView(controller)
 {
     //create main window
     appWindow = new QtMainWindow(appController);

@@ -3,11 +3,10 @@
 
 
 #include "contact.h"
-#include "datasource.h"
+#include "addressbookmodel.h"
 #include "errorinfo.h"
 
 
-class AddressBookUI;
 /************************************************************
     Class: AddressBookController
 
@@ -29,15 +28,15 @@ class AddressBookController
         ErrorInfo getContact(Contact::ContactId id, Contact &c);
         ErrorInfo getAllContacts(Contact::ContactRecordSet &rs);
 
-        //Stores reference to DataSource  abstract base class
+        //Stores reference to AddressBookModel  abstract base class
         //allowing for different kinds of back end data storage
-        //provided it implements the DataSource interface
-        explicit AddressBookController(DataSource &d);
+        //provided it implements the AddressBookModel interface
+        explicit AddressBookController(AddressBookModel &d);
         ~AddressBookController();
         
     private:
-        DataSource &dataStore; 
-        AddressBookUI *frontEnd;
+        AddressBookModel &dataStore; 
+        AddressBookView *frontEnd;
         
 };
 

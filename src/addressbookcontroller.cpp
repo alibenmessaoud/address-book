@@ -3,7 +3,7 @@
 #include "errorinfo.h"
 #include "contact.h"
 
-AddressBookController::AddressBookController(DataSource &d) : dataStore(d)
+AddressBookController::AddressBookController(AddressBookModel &d) : dataStore(d)
 {
     frontEnd = new QtAddressBookGUI(*this);
     frontEnd->show();

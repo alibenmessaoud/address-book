@@ -1,7 +1,7 @@
 #ifndef UI_QTADDRESSBOOKGUI_H
 #define UI_QTADDRESSBOOKGUI_H
 
-#include "addressbookui.h"
+#include "addressbookview.h"
 #include "addressbookcontroller.h"
 #include "qtmainwindow.h"
 
@@ -13,17 +13,17 @@
 
     A Qt front end GUI for the addressbook.
 
-    Implements the AddressBookUI interface
+    Implements the AddressBookView interface
 ***********************************************************************/
 
-class QtAddressBookGUI :  public AddressBookUI
+class QtAddressBookGUI :  public AddressBookView
 {
 
     public:
         QtAddressBookGUI(AddressBookController &controller);
         ~QtAddressBookGUI();
 
-        //AddressBookUI interface
+        //AddressBookView interface
         virtual bool updateData(void);
         virtual bool show(void);
 

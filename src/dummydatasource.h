@@ -1,7 +1,8 @@
-#ifndef DATASTORAGE_DUMMYDATASOURCE_H
-#define DATASTORAGE_DUMMYDATASOURCE_H
+#ifndef MODEL_DUMMYDATASOURCE_H
+#define MODEL_DUMMYDATASOURCE_H
 
-#include "datasource.h"
+#include "addressbookmodel.h"
+#include "addressbookview.h"
 #include "contact.h"
 
 
@@ -12,18 +13,22 @@ const int NUM_CONTACTS = 5;
 
     Author: Phil Grohe
 
-    Mock object implementing the DataSource interface.
+    Mock object implementing the AddressBookModel interface.
     Creates a vector with dummy data when created.
-    DataSource interface methods act on this data rather
+    AddressBookModel interface methods act on this data rather
     than any kind of persistently stored data. Used as a 
-    placeholder until DataSource implementations providing
+    placeholder until AddressBookModel implementations providing
     true persistence are written (flat file, SQL, etc...)
 ************************************************************/
 
-class DummyDataSource : public DataSource
+class DummyDataSource : public AddressBookModel
 {
     public:
         //Data access services 
+        virtual void registerView(AddressBookView *view);
+        virtual void removeView(AddressBookView *view);
+        virtual void notifyViews(void);
+
         virtual bool getContact(Contact::ContactId id, Contact &c);
         virtual bool getAllContacts(Contact::ContactRecordSet &rs);
         virtual bool addContact(const Contact& c);
@@ -39,6 +44,10 @@ class DummyDataSource : public DataSource
 
         Contact::ContactRecordSet recordList;
         Contact::ContactId nextId;
+
+        std::vector<AddressBookView*> observerList;
+
+
 };
 
 #endif

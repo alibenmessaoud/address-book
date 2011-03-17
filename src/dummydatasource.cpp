@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 #include <stdexcept>
+
+#include "addressbookmodel.h"
 #include "dummydatasource.h"
 #include "contact.h"
 
@@ -31,6 +33,36 @@ DummyDataSource::DummyDataSource()
         ss.str("");
     }
         
+}
+
+void DummyDataSource::registerView(AddressBookModel *viewToRegister)
+{
+    if(viewToRegister)
+    {
+        observerList.push_back(viewToRegister);
+    }
+
+}
+
+void DummyDataSource::removeView(AddressBookModel *viewToRemove)
+{
+    if(viewToRemove)
+    {
+        //Find the view in the list and remove it
+        //How does this work?
+        //How do we compare objects
+        //Look up pointer comparison before implementing this
+    }
+}
+
+void DummyDataSource::notifyViews(void)
+{
+    /*
+    for each element in observer list
+    call the updateView method
+    */
+}
+
 }
 
 bool DummyDataSource::getContact(Contact::ContactId id, Contact &c)
