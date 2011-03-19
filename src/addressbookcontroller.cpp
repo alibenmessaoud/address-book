@@ -1,3 +1,5 @@
+#include "addressbookview.h"
+#include "addressbookmodel.h"
 #include "addressbookcontroller.h"
 #include "qtaddressbookgui.h"
 #include "errorinfo.h"
@@ -5,10 +7,15 @@
 
 AddressBookController::AddressBookController(AddressBookModel &d) : dataStore(d)
 {
-    frontEnd = new QtAddressBookGUI(*this);
-    frontEnd->show();
+    frontEnd = new QtAddressBookGUI(*this, dataStore);
+    dataStore.registerView(frontEnd);
+
 }
 
+void AddressBookController::start(void)
+{
+    frontEnd->showUI();
+}
 
 AddressBookController::~AddressBookController()
 {
@@ -25,7 +32,6 @@ ErrorInfo AddressBookController::submitContact(const Contact &c)
 
     if(dataStore.addContact(c))
     {
-        frontEnd->updateData();
         return ErrorInfo(ERR_OK, "OK");
     }
     else
@@ -39,41 +45,11 @@ ErrorInfo AddressBookController::deleteContact(Contact::ContactId id)
 {
     if(dataStore.deleteContact(id))
     {
-        frontEnd->updateData();
         return ErrorInfo(ERR_OK, "OK");
     }
     else
     {
         return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could not delete contact");
-    }
-}
-
-
-ErrorInfo AddressBookController::getContact(Contact::ContactId id, Contact &c)
-{
-    if(dataStore.getContact(id, c))
-    {
-        return ErrorInfo(ERR_OK, "OK");
-    }
-    else
-    {
-        return ErrorInfo(ERR_CONTACT_NOT_FOUND, "No contact with that id was found");
-    }
-
-
-}
-
-
-ErrorInfo AddressBookController::getAllContacts(Contact::ContactRecordSet &rs)
-{
-    
-    if(dataStore.getAllContacts(rs))  
-    {
-        return ErrorInfo(ERR_OK, "OK");
-    }
-    else
-    {
-        return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could Not retrieve contacts.");
     }
 }
 

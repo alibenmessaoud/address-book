@@ -1,9 +1,10 @@
-#ifndef CORE_ADDRESS_BOOK_H
-#define CORE_ADDRESS_BOOK_H
+#ifndef CONTROLLER_ADDRESS_BOOK_H
+#define CONTROLLER_ADDRESS_BOOK_H
 
 
 #include "contact.h"
 #include "addressbookmodel.h"
+#include "addressbookview.h"
 #include "errorinfo.h"
 
 
@@ -22,11 +23,16 @@
 class AddressBookController
 {
     public:
+
         //Interface to UI module
         ErrorInfo submitContact(const Contact &c);
-        ErrorInfo deleteContact(Contact::ContactId id);
-        ErrorInfo getContact(Contact::ContactId id, Contact &c);
-        ErrorInfo getAllContacts(Contact::ContactRecordSet &rs);
+        ErrorInfo deleteContact(const Contact::ContactId id);
+        ErrorInfo editContact(const Contact::ContactId id);
+
+        bool activateEditMode(void);
+        bool disableEditMode(void);
+
+        void start(void);
 
         //Stores reference to AddressBookModel  abstract base class
         //allowing for different kinds of back end data storage
@@ -37,7 +43,6 @@ class AddressBookController
     private:
         AddressBookModel &dataStore; 
         AddressBookView *frontEnd;
-        
 };
 
 

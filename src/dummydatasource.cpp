@@ -1,9 +1,11 @@
 //dummydatasource.cpp
 //Implementation of dummy data source class
 
+#include <algorithm>
 #include <string>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
 
 #include "addressbookmodel.h"
 #include "dummydatasource.h"
@@ -12,7 +14,6 @@
 
 DummyDataSource::DummyDataSource()
 {
-
     nextId = 1;
 
     std::stringstream ss;
@@ -35,35 +36,59 @@ DummyDataSource::DummyDataSource()
         
 }
 
-void DummyDataSource::registerView(AddressBookModel *viewToRegister)
+bool DummyDataSource::isViewRegistered(AddressBookView *viewToCheck)
 {
-    if(viewToRegister)
+    
+    std::vector<AddressBookView*>::const_iterator it;
+    it = std::find(observerList.begin(), observerList.end(), viewToCheck);
+
+    if(it == observerList.end())
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+
+}
+
+void DummyDataSource::registerView(AddressBookView *viewToRegister)
+{
+    
+    if(viewToRegister && !isViewRegistered(viewToRegister))
     {
         observerList.push_back(viewToRegister);
     }
 
 }
 
-void DummyDataSource::removeView(AddressBookModel *viewToRemove)
+void DummyDataSource::removeView(AddressBookView *viewToRemove)
 {
     if(viewToRemove)
     {
         //Find the view in the list and remove it
-        //How does this work?
-        //How do we compare objects
-        //Look up pointer comparison before implementing this
+        std::vector<AddressBookView*>::iterator it;
+        it = std::find(observerList.begin(), observerList.end(), viewToRemove);
+
+        if(it != observerList.end())
+            observerList.erase(it);
+
     }
+        
 }
 
 void DummyDataSource::notifyViews(void)
 {
-    /*
-    for each element in observer list
-    call the updateView method
-    */
+    std::vector<AddressBookView*>::iterator it;
+
+    for(it = observerList.begin(); it != observerList.end(); it++)
+    {
+        (*it)->updateView();
+    }
 }
 
-}
+
 
 bool DummyDataSource::getContact(Contact::ContactId id, Contact &c)
 {
@@ -105,6 +130,10 @@ bool DummyDataSource::addContact(const Contact& c)
     contactToAdd.id = nextId;
     recordList.push_back(contactToAdd);
     nextId++;
+
+    //Data has changed
+    notifyViews();
+
     return true;
 }
 
@@ -115,6 +144,9 @@ bool DummyDataSource::updateContact(Contact::ContactId id, const Contact& c)
     if(idExists(id, it))
     {
         *it = c;
+        
+        //Data has changed
+        notifyViews();
         return true;
     }
     else
@@ -131,6 +163,9 @@ bool DummyDataSource::deleteContact(Contact::ContactId id)
     if(idExists(id, itemToDeletePosition))
     {
         recordList.erase(itemToDeletePosition);
+        
+        //Data has changed
+        notifyViews();
         return true;
     }
     else
@@ -143,6 +178,8 @@ bool DummyDataSource::deleteContact(Contact::ContactId id)
 bool DummyDataSource::deleteAllContacts(void)
 {
     recordList.clear();    
+
+    notifyViews();
     return true;
 }
 

@@ -1,37 +1,54 @@
-#ifndef UI_QTADDRESSBOOKGUI_H
-#define UI_QTADDRESSBOOKGUI_H
+#ifndef UI_MAINWINDOW
+#define UI_MAINWINDOW
 
-#include "addressbookview.h"
+#include <QMainWindow>   
+#include <QPushButton>
 #include "addressbookcontroller.h"
-#include "qtmainwindow.h"
-
+#include "addressbookmodel.h"
+#include "addressbookview.h"
+#include "qtcontactlist.h"
+#include "qtcontactdetailform.h"
 
 /***********************************************************************
     Class: QtAddressBookGUI
 
     Author: Phil Grohe
 
-    A Qt front end GUI for the addressbook.
-
-    Implements the AddressBookView interface
+    Top level application window.  Instantiates sub widgets and connects
+    their signals and slots.
 ***********************************************************************/
 
-class QtAddressBookGUI :  public AddressBookView
+class QtAddressBookGUI : private QMainWindow, public AddressBookView
 {
+    Q_OBJECT
 
     public:
-        QtAddressBookGUI(AddressBookController &controller);
-        ~QtAddressBookGUI();
+        QtAddressBookGUI(AddressBookController &controller, AddressBookModel &model, 
+        QWidget *parent=0, Qt::WindowFlags flags=0);
+
 
         //AddressBookView interface
-        virtual bool updateData(void);
-        virtual bool show(void);
+        virtual void updateView(void);
+        virtual bool enableEditMode(void);
+        virtual bool disableEditMode(void);
+        virtual void showUI(void);
+        virtual ~QtAddressBookGUI();
+
+    signals:
+        void pullDataFromModel(void);
+
+    public slots:
+        void addContact(void);
 
     private:
-        QtMainWindow *appWindow;
+        void createWidgets(void);
 
-};
+        QtContactList *list;
+        QtContactDetailForm *detailView;
+        QPushButton *addButton;
+
+        AddressBookController& appController;
+        AddressBookModel& dataSource;
+}; 
 
 #endif
-
-

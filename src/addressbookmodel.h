@@ -2,6 +2,7 @@
 #define MODEL_ADDRESSBOOK_MODEL_H
 
 #include "contact.h"
+#include "addressbookview.h"
 
 /***********************************************************************
     Class: AddressBookModel

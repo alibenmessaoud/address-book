@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include "contact.h"
-#include "addressbookcontroller.h"
+#include "addressbookmodel.h"
 
 /***********************************************************************
 Class: QtContactDetailForm
@@ -23,19 +23,20 @@ class QtContactDetailForm : public QFrame
     Q_OBJECT
 
     public:
-        QtContactDetailForm(AddressBookController &controller, QWidget *parent=0);
+        QtContactDetailForm(AddressBookModel &model, QWidget *parent=0);
+
+    private slots:
+        void displayContact(Contact::ContactId id);
 
     private:
         void createFormWidgets(void);
 
-        AddressBookController &appController;
         QLineEdit *nameField;
         QLineEdit *addressField;
         QLineEdit *phoneNumberField;
         QLineEdit *emailField;
         QLabel *errorMsg;
 
-    private slots:
-        void displayContact(Contact::ContactId id);
+        AddressBookModel &dataSource;
 };
 #endif

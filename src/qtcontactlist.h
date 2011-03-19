@@ -3,7 +3,7 @@
 
 #include <QListWidget>
 
-#include "addressbookcontroller.h"
+#include "addressbookmodel.h"
 #include "contact.h"
 
 /***********************************************************************
@@ -32,20 +32,22 @@ class QtContactList : public QListWidget
     Q_OBJECT
 
     public:
-        QtContactList(AddressBookController &controller, QWidget *parent=0); 
+        QtContactList(AddressBookModel& model, QWidget *parent=0); 
 
     public slots:
-        void refreshList(void); 
+        void getContactList(void); 
 
     signals:
         void contactSelected(Contact::ContactId selectedId);
 
     private slots:
         void dispatchListItemContactId(void);
-        void populateList(Contact::ContactId selected=0);
 
     private:
-        AddressBookController &appController;
+        void populateList(Contact::ContactId selected=0);
+
+        AddressBookModel& dataSource;
+
 }; 
 
 #endif

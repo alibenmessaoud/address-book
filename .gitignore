@@ -5,3 +5,4 @@ rebuild_project.sh
 makefile_bak
 moc_*.cpp
 *.dia
+docs

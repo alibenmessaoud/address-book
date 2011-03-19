@@ -6,8 +6,8 @@
 #include <QLineEdit>
 #include <QLabel>
 
-QtContactDetailForm::QtContactDetailForm(AddressBookController &controller,
-    QWidget *parent) : QFrame(parent), appController(controller)
+QtContactDetailForm::QtContactDetailForm(AddressBookModel& model, 
+                    QWidget *parent) : QFrame(parent), dataSource(model)
 {
     createFormWidgets();
 }
@@ -43,9 +43,9 @@ void QtContactDetailForm::displayContact(Contact::ContactId id)
 {
     Contact c;
 
-    ErrorInfo e = appController.getContact(id, c);
+     bool success = dataSource.getContact(id, c);
 
-    if(e.code == ERR_OK)
+    if(success)
     {
         std::string fullName = c.firstName + " " + c.lastName;
 
@@ -56,7 +56,7 @@ void QtContactDetailForm::displayContact(Contact::ContactId id)
     }
     else
     {
-        errorMsg->setText(e.msg.c_str());
+        errorMsg->setText("ERROR RETRIEVING CONTACT, FIX ERROR HANDLING");
     }
 }
 

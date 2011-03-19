@@ -17,8 +17,8 @@ Populate List
         Create a new entry on the list with those name combined
 */
 
-QtContactList::QtContactList(AddressBookController &controller, QWidget *parent) : 
-    QListWidget(parent), appController(controller) 
+QtContactList::QtContactList(AddressBookModel &model, QWidget *parent) : 
+    QListWidget(parent), dataSource(model)
 {
     setSelectionMode(QAbstractItemView::SingleSelection);
 
@@ -33,7 +33,7 @@ void QtContactList::populateList(Contact::ContactId selected)
 
     //Get all the contacts from the data store
     Contact::ContactRecordSet allContacts;
-    appController.getAllContacts(allContacts);
+    dataSource.getAllContacts(allContacts);
     
     Contact::ContactRecordSet::const_iterator it;
 
@@ -58,7 +58,7 @@ void QtContactList::populateList(Contact::ContactId selected)
     
 }        
 
-void QtContactList::refreshList(void)
+void QtContactList::getContactList(void)
 {
     //keep the id of the currently selected item
     QList<QListWidgetItem*> currentSelected = selectedItems();
@@ -66,6 +66,7 @@ void QtContactList::refreshList(void)
     
     if(!currentSelected.isEmpty())
     {
+        //Take the first element of the list because we only allow single selection
         selectedContactId = currentSelected[0]->data(Qt::UserRole).toUInt();
     }
 

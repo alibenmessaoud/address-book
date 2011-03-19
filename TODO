@@ -34,3 +34,5 @@ ContactDetail form.  I'm using the wrong Qt signal, the clicked() one rather tha
 one.
 
 Set the ContactList widget's selected item to the 1st item in the list when it's constructed.
+
+Re structure all error handling to work with new MVC architecture.

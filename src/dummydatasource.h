@@ -40,14 +40,13 @@ class DummyDataSource : public AddressBookModel
         ~DummyDataSource() { };
 
     private:
+        bool isViewRegistered(AddressBookView *viewToCheck);
         bool idExists(Contact::ContactId id, Contact::ContactRecordSet::iterator &pos);
 
         Contact::ContactRecordSet recordList;
         Contact::ContactId nextId;
 
         std::vector<AddressBookView*> observerList;
-
-
 };
 
 #endif
