@@ -10,7 +10,7 @@
 #include "addressbookcontroller.h"
 #include "addressbookmodel.h"
 #include "qtcontactlist.h"
-#include "qtcontactdetailform.h"
+#include "qtcontactdetailview.h"
 #include "contact.h"
 
 QtAddressBookGUI::QtAddressBookGUI(AddressBookController &controller, AddressBookModel &model,
@@ -34,7 +34,7 @@ void QtAddressBookGUI::updateView(void)
 void QtAddressBookGUI::createWidgets(void)
 {
     
-    detailView = new QtContactDetailForm(dataSource);
+    detailView = new QtContactDetailView(dataSource);
 
     list = new QtContactList(dataSource);
     list->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);

@@ -8,7 +8,7 @@
 #include "addressbookmodel.h"
 
 /***********************************************************************
-Class: QtContactDetailForm
+Class: QtContactDetailView
 
 Author: Phil Grohe
 
@@ -18,12 +18,12 @@ Slot displayContact(Contact::ContactId id) receives the contact to
 be displayed and 
 ***********************************************************************/
 
-class QtContactDetailForm : public QFrame
+class QtContactDetailView : public QFrame
 {
     Q_OBJECT
 
     public:
-        QtContactDetailForm(AddressBookModel &model, QWidget *parent=0);
+        QtContactDetailView(AddressBookModel &model, QWidget *parent=0);
 
     private slots:
         void displayContact(Contact::ContactId id);

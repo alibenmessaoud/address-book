@@ -7,7 +7,7 @@
 #include "addressbookmodel.h"
 #include "addressbookview.h"
 #include "qtcontactlist.h"
-#include "qtcontactdetailform.h"
+#include "qtcontactdetailview.h"
 
 /***********************************************************************
     Class: QtAddressBookGUI
@@ -44,7 +44,7 @@ class QtAddressBookGUI : private QMainWindow, public AddressBookView
         void createWidgets(void);
 
         QtContactList *list;
-        QtContactDetailForm *detailView;
+        QtContactDetailView *detailView;
         QPushButton *addButton;
 
         AddressBookController& appController;
