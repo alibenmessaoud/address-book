@@ -12,7 +12,7 @@ AddressBookController::AddressBookController(AddressBookModel &d) : dataStore(d)
 
 }
 
-void AddressBookController::start(void)
+void AddressBookController::start()
 {
     frontEnd->showUI();
 }

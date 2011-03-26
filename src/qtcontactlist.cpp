@@ -58,7 +58,7 @@ void QtContactList::populateList(Contact::ContactId selected)
     
 }        
 
-void QtContactList::getContactList(void)
+void QtContactList::getContactList()
 {
     //keep the id of the currently selected item
     QList<QListWidgetItem*> currentSelected = selectedItems();
@@ -75,7 +75,7 @@ void QtContactList::getContactList(void)
 
 }
 
-void QtContactList::dispatchListItemContactId(void)
+void QtContactList::dispatchListItemContactId()
 {
     Contact::ContactId selectedItemId = currentItem()->data(Qt::UserRole).toUInt();
 

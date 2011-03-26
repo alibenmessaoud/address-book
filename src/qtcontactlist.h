@@ -35,13 +35,13 @@ class QtContactList : public QListWidget
         QtContactList(AddressBookModel& model, QWidget *parent=0); 
 
     public slots:
-        void getContactList(void); 
+        void getContactList(); 
 
     signals:
         void contactSelected(Contact::ContactId selectedId);
 
     private slots:
-        void dispatchListItemContactId(void);
+        void dispatchListItemContactId();
 
     private:
         void populateList(Contact::ContactId selected=0);

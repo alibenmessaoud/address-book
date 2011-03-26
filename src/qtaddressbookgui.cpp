@@ -5,10 +5,11 @@
 #include <QHBoxLayout>
 #include <QFrame>
 
-#include "qtaddressbookgui.h"
 #include "addressbookview.h"
 #include "addressbookcontroller.h"
 #include "addressbookmodel.h"
+#include "qtaddressbookgui.h"
+#include "qtaddcontactdialog.h"
 #include "qtcontactlist.h"
 #include "qtcontactdetailview.h"
 #include "contact.h"
@@ -25,26 +26,35 @@ QtAddressBookGUI::~QtAddressBookGUI()
 {
 
 }
-void QtAddressBookGUI::updateView(void)
+void QtAddressBookGUI::updateView()
 {
     emit pullDataFromModel();
 }
 
 
-void QtAddressBookGUI::createWidgets(void)
+void QtAddressBookGUI::createWidgets()
 {
-    
     detailView = new QtContactDetailView(dataSource);
 
     list = new QtContactList(dataSource);
     list->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    addButton = new QPushButton("Add Contact");
+    newContactButton = new QPushButton("New Contact");
+    editContactButton = new QPushButton("Edit");
+    deleteContactButton = new QPushButton("Delete");
+
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    buttonLayout->addWidget(newContactButton);
+    buttonLayout->addWidget(editContactButton);
+    buttonLayout->addWidget(deleteContactButton);
+
+    QVBoxLayout *rightSideLayout = new QVBoxLayout();
+    rightSideLayout->addWidget(detailView);
+    rightSideLayout->addLayout(buttonLayout);
 
     QHBoxLayout *mainLayout = new QHBoxLayout();
     mainLayout->addWidget(list);
-    mainLayout->addWidget(detailView);
-    mainLayout->addWidget(addButton);
+    mainLayout->addLayout(rightSideLayout);
     
     //Connect contact list to the detail form
     connect(list, 
@@ -52,16 +62,17 @@ void QtAddressBookGUI::createWidgets(void)
             detailView,
             SLOT(displayContact(Contact::ContactId)));
 
+    connect(newContactButton, SIGNAL(clicked()),
+            this, SLOT(addContact()));
+
     //tell the sub-widgets to refresh their data from
-    //the model when the signal is emitted. 
     //
     //Will be emitted when the view is notified by
     //the model that the data has changed
     connect(this, SIGNAL(pullDataFromModel()), list,
             SLOT(getContactList())); 
 
-    connect(addButton, SIGNAL(clicked()), this,
-            SLOT(addContact()));
+    
 
     QFrame *mainWidget = new QFrame();
     mainWidget->setLayout(mainLayout);
@@ -69,30 +80,33 @@ void QtAddressBookGUI::createWidgets(void)
     setCentralWidget(mainWidget);
 }
 
-bool QtAddressBookGUI::enableEditMode(void)
+bool QtAddressBookGUI::enableEditMode()
 {
     return true;
 }
 
-bool QtAddressBookGUI::disableEditMode(void)
+bool QtAddressBookGUI::disableEditMode()
 {
     return true;
 }
 
-void QtAddressBookGUI::showUI(void)
+void QtAddressBookGUI::showUI()
 {
     QMainWindow::show();
 }
 
-void QtAddressBookGUI::addContact(void)
+void QtAddressBookGUI::addContact()
 {
-    Contact c;
+    Contact newContact;
+    QtAddContactDialog *addDialog = new QtAddContactDialog(newContact, this);
 
-    c.firstName = "Test";
-    c.lastName = "Test";
-    c.phoneNumber = "55555555";
-    c.address = "23432 1st Ave";
-    c.email = "adsf@adsf.asd";
+    if(addDialog->exec())
+    {
+        appController.submitContact(newContact);
+    }
+}
 
-    appController.submitContact(c);
+void QtAddressBookGUI::deleteContact()
+{
+
 }

@@ -28,24 +28,28 @@ class QtAddressBookGUI : private QMainWindow, public AddressBookView
 
 
         //AddressBookView interface
-        virtual void updateView(void);
-        virtual bool enableEditMode(void);
-        virtual bool disableEditMode(void);
-        virtual void showUI(void);
+        virtual void updateView();
+        virtual bool enableEditMode();
+        virtual bool disableEditMode();
+        virtual void showUI();
         virtual ~QtAddressBookGUI();
 
     signals:
-        void pullDataFromModel(void);
+        void pullDataFromModel();
 
-    public slots:
-        void addContact(void);
+    private slots:
+        void addContact();
+        void deleteContact();
 
     private:
-        void createWidgets(void);
+        void createWidgets();
 
         QtContactList *list;
         QtContactDetailView *detailView;
-        QPushButton *addButton;
+
+        QPushButton *newContactButton;
+        QPushButton *editContactButton;
+        QPushButton *deleteContactButton;
 
         AddressBookController& appController;
         AddressBookModel& dataSource;

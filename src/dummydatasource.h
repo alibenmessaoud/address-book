@@ -27,14 +27,14 @@ class DummyDataSource : public AddressBookModel
         //Data access services 
         virtual void registerView(AddressBookView *view);
         virtual void removeView(AddressBookView *view);
-        virtual void notifyViews(void);
+        virtual void notifyViews();
 
         virtual bool getContact(Contact::ContactId id, Contact &c);
         virtual bool getAllContacts(Contact::ContactRecordSet &rs);
         virtual bool addContact(const Contact& c);
         virtual bool updateContact(Contact::ContactId id, const Contact& c);
         virtual bool deleteContact(Contact::ContactId id);
-        virtual bool deleteAllContacts(void);
+        virtual bool deleteAllContacts();
 
         DummyDataSource();  
         ~DummyDataSource() { };

@@ -1,6 +1,6 @@
 #include "contact.h"
 
-bool Contact::isValidToAdd(void) const
+bool Contact::isValidToAdd() const
 {
     /*
     Adding a new contact requires:
@@ -22,7 +22,7 @@ bool Contact::isValidToAdd(void) const
     }
 }
 
-bool Contact::isEmpty(void) const
+bool Contact::isEmpty() const
 {
     if(firstName.empty() && 
         lastName.empty() &&

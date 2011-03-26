@@ -15,12 +15,12 @@ class AddressBookView
 {
     public:
         
-        virtual bool enableEditMode(void)=0;
-        virtual bool disableEditMode(void)=0;
-        virtual void showUI(void)=0; 
+        virtual bool enableEditMode()=0;
+        virtual bool disableEditMode()=0;
+        virtual void showUI()=0; 
 
         //Model has changed, update info in UI
-        virtual void updateView(void) = 0;
+        virtual void updateView() = 0;
         virtual ~AddressBookView() {};        
         
 };

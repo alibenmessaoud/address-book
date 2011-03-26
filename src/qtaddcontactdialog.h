@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QWidget>
 #include "qtcontactform.h"
+#include "contact.h"
 
 /***********************************************************************
     Class: QtAddContactDialog
@@ -15,11 +16,18 @@
 
 class QtAddContactDialog : public QDialog
 {
+
+    Q_OBJECT 
+
     public:
-        QtAddContactDialog(QWidget* parent=0, Qt::WindowFlags f=0);
+        QtAddContactDialog(Contact &c, QWidget* parent=0, Qt::WindowFlags f=0);
+
+    public slots:
+        void accept();
 
     private:
         QtContactForm *contactForm;
+        Contact &outContact;
 };
 
 #endif

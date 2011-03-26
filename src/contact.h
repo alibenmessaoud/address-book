@@ -28,8 +28,8 @@ class Contact
         std::string email;
 
         Contact():id(0), firstName(), lastName(), phoneNumber(), email(){ }
-        bool isValidToAdd(void) const;
-        bool isEmpty(void) const;
+        bool isValidToAdd() const;
+        bool isEmpty() const;
 
 };
 

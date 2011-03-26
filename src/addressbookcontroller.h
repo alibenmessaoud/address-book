@@ -29,10 +29,10 @@ class AddressBookController
         ErrorInfo deleteContact(const Contact::ContactId id);
         ErrorInfo editContact(const Contact::ContactId id);
 
-        bool activateEditMode(void);
-        bool disableEditMode(void);
+        bool activateEditMode();
+        bool disableEditMode();
 
-        void start(void);
+        void start();
 
         //Stores reference to AddressBookModel  abstract base class
         //allowing for different kinds of back end data storage

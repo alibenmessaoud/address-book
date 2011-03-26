@@ -1,43 +1,29 @@
 #include "qtcontactdetailview.h"
+#include "qtcontactform.h"
 #include "errorinfo.h"
 
 #include <string>
-#include <QFormLayout>
 #include <QLineEdit>
 #include <QLabel>
+#include <QGroupBox>
 
 QtContactDetailView::QtContactDetailView(AddressBookModel& model, 
-                    QWidget *parent) : QFrame(parent), dataSource(model)
+                    QWidget *parent) : 
+                    QGroupBox("Contact Details", parent),
+                    dataSource(model),
+                    contactForm(new QtContactForm())
 {
-    createFormWidgets();
-}
 
-void QtContactDetailView::createFormWidgets(void)
-{
-    QFormLayout *layout = new QFormLayout(this);
-    
-    nameField = new QLineEdit();
-    addressField = new QLineEdit();
-    phoneNumberField = new QLineEdit();
-    emailField = new QLineEdit();
-    
+    contactForm->firstNameField->setReadOnly(true);
+    contactForm->lastNameField->setReadOnly(true);
+    contactForm->addressField->setReadOnly(true);
+    contactForm->phoneNumberField->setReadOnly(true);
+    contactForm->emailField->setReadOnly(true);
 
-    
-    nameField->setReadOnly(true);
-    addressField->setReadOnly(true);
-    phoneNumberField->setReadOnly(true);
-    emailField->setReadOnly(true);
-    
-    errorMsg = new QLabel("");
-
-    layout->addRow("Name", nameField);
-    layout->addRow("Address", addressField);
-    layout->addRow("Phone Number", phoneNumberField);
-    layout->addRow("Email", emailField);
-    layout->addRow("", errorMsg);
+    setLayout(contactForm);
+    setFlat(false);
     
 }
-
 
 void QtContactDetailView::displayContact(Contact::ContactId id)
 {
@@ -47,16 +33,12 @@ void QtContactDetailView::displayContact(Contact::ContactId id)
 
     if(success)
     {
-        std::string fullName = c.firstName + " " + c.lastName;
 
-        nameField->setText(fullName.c_str());
-        addressField->setText(c.address.c_str());
-        phoneNumberField->setText(c.phoneNumber.c_str());
-        emailField->setText(c.email.c_str());
-    }
-    else
-    {
-        errorMsg->setText("ERROR RETRIEVING CONTACT, FIX ERROR HANDLING");
+        contactForm->firstNameField->setText(c.firstName.c_str());
+        contactForm->lastNameField->setText(c.lastName.c_str());
+        contactForm->addressField->setText(c.address.c_str());
+        contactForm->phoneNumberField->setText(c.phoneNumber.c_str());
+        contactForm->emailField->setText(c.email.c_str());
     }
 }
 

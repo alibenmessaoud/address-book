@@ -78,7 +78,7 @@ void DummyDataSource::removeView(AddressBookView *viewToRemove)
         
 }
 
-void DummyDataSource::notifyViews(void)
+void DummyDataSource::notifyViews()
 {
     std::vector<AddressBookView*>::iterator it;
 
@@ -175,7 +175,7 @@ bool DummyDataSource::deleteContact(Contact::ContactId id)
     }
 }
 
-bool DummyDataSource::deleteAllContacts(void)
+bool DummyDataSource::deleteAllContacts()
 {
     recordList.clear();    
 

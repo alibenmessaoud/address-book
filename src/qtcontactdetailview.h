@@ -1,11 +1,12 @@
 #ifndef UI_QTCONTACTDETAIL_FORM
 #define UI_QTCONTACTDETAIL_FORM
 
-#include <QFrame>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
 #include "contact.h"
 #include "addressbookmodel.h"
+#include "qtcontactform.h"
 
 /***********************************************************************
 Class: QtContactDetailView
@@ -18,7 +19,7 @@ Slot displayContact(Contact::ContactId id) receives the contact to
 be displayed and 
 ***********************************************************************/
 
-class QtContactDetailView : public QFrame
+class QtContactDetailView : public QGroupBox
 {
     Q_OBJECT
 
@@ -29,14 +30,7 @@ class QtContactDetailView : public QFrame
         void displayContact(Contact::ContactId id);
 
     private:
-        void createFormWidgets(void);
-
-        QLineEdit *nameField;
-        QLineEdit *addressField;
-        QLineEdit *phoneNumberField;
-        QLineEdit *emailField;
-        QLabel *errorMsg;
-
         AddressBookModel &dataSource;
+        QtContactForm* contactForm;
 };
 #endif
