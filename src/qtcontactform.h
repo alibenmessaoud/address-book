@@ -31,6 +31,8 @@ class QtContactForm : public QFormLayout
     public:
         QtContactForm(QWidget *parent=0);
 
+        void clear();
+
         QLineEdit *firstNameField;
         QLineEdit *lastNameField;
         QLineEdit *addressField;

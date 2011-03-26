@@ -42,3 +42,8 @@ void QtContactDetailView::displayContact(Contact::ContactId id)
     }
 }
 
+void QtContactDetailView::clear()
+{
+    contactForm->clear();
+}
+

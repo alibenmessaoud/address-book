@@ -33,6 +33,7 @@ class QtContactList : public QListWidget
 
     public:
         QtContactList(AddressBookModel& model, QWidget *parent=0); 
+        Contact::ContactId getSelectedContactId();
 
     public slots:
         void getContactList(); 

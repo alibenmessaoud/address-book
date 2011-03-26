@@ -65,6 +65,9 @@ void QtAddressBookGUI::createWidgets()
     connect(newContactButton, SIGNAL(clicked()),
             this, SLOT(addContact()));
 
+    connect(deleteContactButton, SIGNAL(clicked()),
+            this, SLOT(deleteContact()));
+
     //tell the sub-widgets to refresh their data from
     //
     //Will be emitted when the view is notified by
@@ -108,5 +111,34 @@ void QtAddressBookGUI::addContact()
 
 void QtAddressBookGUI::deleteContact()
 {
+    Contact::ContactId idToDelete = list->getSelectedContactId();
 
+    if(idToDelete)
+    {
+        bool firstRow  = list->currentRow() == 0;
+        bool onlyRowLeft = list->count() == 1;
+        
+        if(!onlyRowLeft)
+        {
+            if(firstRow)
+            {
+                list->setCurrentRow(list->currentRow()+1,QItemSelectionModel::SelectCurrent);
+            }
+            else
+            {
+                //It is NOT the only row left AND it is not the first row.
+                //So in this case, selection moves to the previous row.
+                list->setCurrentRow(list->currentRow()-1,QItemSelectionModel::SelectCurrent);
+            }
+        }
+        else
+        {
+            //only row left, clear the contact detail view so it doesn't display the last
+            //Contact selected before deletion
+            detailView->clear();
+        }
+        
+            appController.deleteContact(idToDelete);
+    }
 }
+

@@ -26,6 +26,8 @@ QtContactList::QtContactList(AddressBookModel &model, QWidget *parent) :
 
     populateList();
 
+    setCurrentRow(0, QItemSelectionModel::SelectCurrent); 
+
 }
 
 void QtContactList::populateList(Contact::ContactId selected)
@@ -60,25 +62,31 @@ void QtContactList::populateList(Contact::ContactId selected)
 
 void QtContactList::getContactList()
 {
-    //keep the id of the currently selected item
-    QList<QListWidgetItem*> currentSelected = selectedItems();
-    Contact::ContactId selectedContactId = 0;
-    
-    if(!currentSelected.isEmpty())
-    {
-        //Take the first element of the list because we only allow single selection
-        selectedContactId = currentSelected[0]->data(Qt::UserRole).toUInt();
-    }
+    Contact::ContactId selectionToRetain = getSelectedContactId(); 
 
     clear();
-    populateList(selectedContactId);
+    populateList(selectionToRetain);
 
 }
 
 void QtContactList::dispatchListItemContactId()
 {
-    Contact::ContactId selectedItemId = currentItem()->data(Qt::UserRole).toUInt();
+    Contact::ContactId selectedItemId = getSelectedContactId(); 
 
     emit contactSelected(selectedItemId);
 }
 
+Contact::ContactId QtContactList::getSelectedContactId()
+{
+    Contact::ContactId selectedContactId = 0;
+    
+    QListWidgetItem *selectedItem = currentItem();
+    
+    if(selectedItem)
+    {
+        //Take the first element of the list because we only allow single selection
+        selectedContactId = selectedItem->data(Qt::UserRole).toUInt();
+    }
+    
+    return selectedContactId;
+}

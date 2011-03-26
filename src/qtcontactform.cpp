@@ -19,3 +19,11 @@ QtContactForm::QtContactForm(QWidget *parent) :
     addRow("Email", emailField);
 }
 
+void QtContactForm::clear()
+{
+    firstNameField->setText("");
+    lastNameField->setText("");
+    addressField->setText("");
+    phoneNumberField->setText("");
+    emailField->setText("");
+}

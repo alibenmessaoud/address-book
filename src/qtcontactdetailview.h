@@ -26,6 +26,8 @@ class QtContactDetailView : public QGroupBox
     public:
         QtContactDetailView(AddressBookModel &model, QWidget *parent=0);
 
+        void clear();
+
     private slots:
         void displayContact(Contact::ContactId id);
 
