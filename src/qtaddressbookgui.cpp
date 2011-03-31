@@ -12,6 +12,7 @@
 #include "qtaddcontactdialog.h"
 #include "qtcontactlist.h"
 #include "qtcontactdetailview.h"
+#include "qteditcontactdialog.h"
 #include "contact.h"
 
 QtAddressBookGUI::QtAddressBookGUI(AddressBookController &controller, AddressBookModel &model,
@@ -68,29 +69,27 @@ void QtAddressBookGUI::createWidgets()
     connect(deleteContactButton, SIGNAL(clicked()),
             this, SLOT(deleteContact()));
 
+    connect(editContactButton, SIGNAL(clicked()),
+            this, SLOT(editContact()));
+
     //tell the sub-widgets to refresh their data from
     //
     //Will be emitted when the view is notified by
     //the model that the data has changed
     connect(this, SIGNAL(pullDataFromModel()), list,
-            SLOT(getContactList())); 
-
-    
+            SLOT(refreshContactList())); 
 
     QFrame *mainWidget = new QFrame();
     mainWidget->setLayout(mainLayout);
 
     setCentralWidget(mainWidget);
-}
 
-bool QtAddressBookGUI::enableEditMode()
-{
-    return true;
-}
-
-bool QtAddressBookGUI::disableEditMode()
-{
-    return true;
+    //Needed to get the detail view form to display
+    //the initial selection at startup.
+    //When the list object is first created the signals / slots
+    //arent yet connected so the initial selection isn't shown
+    //This manual call will cause it to update
+    list->refreshContactList();
 }
 
 void QtAddressBookGUI::showUI()
@@ -109,11 +108,39 @@ void QtAddressBookGUI::addContact()
     }
 }
 
+void QtAddressBookGUI::editContact()
+{
+    Contact::ContactId idToEdit = list->getSelectedContactId();
+
+    if(idToEdit == Contact::INVALID_ID)
+    {
+        return;
+    }
+
+    
+    Contact editingContact;
+    bool success = dataSource.getContact(idToEdit, editingContact);
+
+    if(!success)
+    {
+        return;
+    }
+   
+    QtEditContactDialog *editDialog = new QtEditContactDialog(editingContact, this);
+
+    if(editDialog->exec())
+    {
+        appController.editContact(idToEdit, editingContact);
+    }
+
+
+}
+
 void QtAddressBookGUI::deleteContact()
 {
     Contact::ContactId idToDelete = list->getSelectedContactId();
 
-    if(idToDelete)
+    if(idToDelete != Contact::INVALID_ID)
     {
         bool firstRow  = list->currentRow() == 0;
         bool onlyRowLeft = list->count() == 1;

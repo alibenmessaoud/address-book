@@ -19,6 +19,7 @@ class Contact
 
         typedef std::vector<Contact> ContactRecordSet;
         typedef unsigned int ContactId;
+        static const ContactId INVALID_ID = 0;
 
         ContactId id;
         std::string firstName;

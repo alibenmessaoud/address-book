@@ -15,8 +15,6 @@ class AddressBookView
 {
     public:
         
-        virtual bool enableEditMode()=0;
-        virtual bool disableEditMode()=0;
         virtual void showUI()=0; 
 
         //Model has changed, update info in UI

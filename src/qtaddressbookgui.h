@@ -18,7 +18,7 @@
     their signals and slots.
 ***********************************************************************/
 
-class QtAddressBookGUI : private QMainWindow, public AddressBookView
+class QtAddressBookGUI : public QMainWindow, public AddressBookView
 {
     Q_OBJECT
 
@@ -29,8 +29,6 @@ class QtAddressBookGUI : private QMainWindow, public AddressBookView
 
         //AddressBookView interface
         virtual void updateView();
-        virtual bool enableEditMode();
-        virtual bool disableEditMode();
         virtual void showUI();
         virtual ~QtAddressBookGUI();
 
@@ -40,6 +38,7 @@ class QtAddressBookGUI : private QMainWindow, public AddressBookView
     private slots:
         void addContact();
         void deleteContact();
+        void editContact();
 
     private:
         void createWidgets();

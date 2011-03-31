@@ -1,3 +1,4 @@
+#include "contact.h"
 #include "qtaddcontactdialog.h"
 #include <QDialog>
 #include <QWidget>

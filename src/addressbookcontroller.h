@@ -27,10 +27,7 @@ class AddressBookController
         //Interface to UI module
         ErrorInfo submitContact(const Contact &c);
         ErrorInfo deleteContact(const Contact::ContactId id);
-        ErrorInfo editContact(const Contact::ContactId id);
-
-        bool activateEditMode();
-        bool disableEditMode();
+        ErrorInfo editContact(const Contact::ContactId id, const Contact &c);
 
         void start();
 

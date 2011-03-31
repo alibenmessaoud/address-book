@@ -20,7 +20,7 @@ class QtAddContactDialog : public QDialog
     Q_OBJECT 
 
     public:
-        QtAddContactDialog(Contact &c, QWidget* parent=0, Qt::WindowFlags f=0);
+        QtAddContactDialog(Contact &c, QWidget *parent=0, Qt::WindowFlags f=0);
 
     public slots:
         void accept();

@@ -36,7 +36,7 @@ class QtContactList : public QListWidget
         Contact::ContactId getSelectedContactId();
 
     public slots:
-        void getContactList(); 
+        void refreshContactList(); 
 
     signals:
         void contactSelected(Contact::ContactId selectedId);

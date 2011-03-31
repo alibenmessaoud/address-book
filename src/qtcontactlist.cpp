@@ -26,7 +26,7 @@ QtContactList::QtContactList(AddressBookModel &model, QWidget *parent) :
 
     populateList();
 
-    setCurrentRow(0, QItemSelectionModel::SelectCurrent); 
+    setCurrentRow(0, QItemSelectionModel::SelectCurrent);
 
 }
 
@@ -60,7 +60,7 @@ void QtContactList::populateList(Contact::ContactId selected)
     
 }        
 
-void QtContactList::getContactList()
+void QtContactList::refreshContactList()
 {
     Contact::ContactId selectionToRetain = getSelectedContactId(); 
 
@@ -78,7 +78,7 @@ void QtContactList::dispatchListItemContactId()
 
 Contact::ContactId QtContactList::getSelectedContactId()
 {
-    Contact::ContactId selectedContactId = 0;
+    Contact::ContactId selectedContactId = Contact::INVALID_ID;
     
     QListWidgetItem *selectedItem = currentItem();
     
