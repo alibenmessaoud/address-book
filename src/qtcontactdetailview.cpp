@@ -1,5 +1,6 @@
 #include "qtcontactdetailview.h"
 #include "qtcontactform.h"
+#include "qterrordialog.h"
 #include "errorinfo.h"
 
 #include <string>
@@ -29,9 +30,16 @@ void QtContactDetailView::displayContact(Contact::ContactId id)
 {
     Contact c;
 
-     bool success = dataSource.getContact(id, c);
+    ErrorInfo getContactErrorStatus = dataSource.getContact(id, c);
 
-    if(success)
+    if(getContactErrorStatus.code != ERR_OK)
+    {
+        //could not fetch the contact
+        //simply clear the fields
+        clear();
+        return;
+    }
+    else
     {
 
         contactForm->firstNameField->setText(c.firstName.c_str());

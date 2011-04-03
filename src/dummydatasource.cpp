@@ -90,23 +90,23 @@ void DummyDataSource::notifyViews()
 
 
 
-bool DummyDataSource::getContact(Contact::ContactId id, Contact &c)
+ErrorInfo DummyDataSource::getContact(Contact::ContactId id, Contact &c)
 {
     Contact::ContactRecordSet::iterator it;
     
     if(idExists(id, it))
     {
         c = *it;
-        return true;
+        return ErrorInfo(ERR_OK, "OK");
     }
     else
     {
-        return false;
+        return ErrorInfo(ERR_DATASOURCE_ERROR, "Contact could not be retrieved!");
     }
 
 }
 
-bool DummyDataSource::getAllContacts(Contact::ContactRecordSet &rs)
+ErrorInfo DummyDataSource::getAllContacts(Contact::ContactRecordSet &rs)
 {
     //Never returns false in this dummy class
     //Would return false in a real datasource if file could not be
@@ -115,16 +115,16 @@ bool DummyDataSource::getAllContacts(Contact::ContactRecordSet &rs)
     if(recordList.empty())
     {
         rs = Contact::ContactRecordSet();
-        return true;
+        return ErrorInfo(ERR_OK, "OK");
     }
     else
     {
          rs = Contact::ContactRecordSet(recordList);
-        return true;
+        return ErrorInfo(ERR_OK, "OK");
     }
 }
 
-bool DummyDataSource::addContact(const Contact& c)
+ErrorInfo DummyDataSource::addContact(const Contact& c)
 {
     Contact contactToAdd = c;
     contactToAdd.id = nextId;
@@ -134,10 +134,10 @@ bool DummyDataSource::addContact(const Contact& c)
     //Data has changed
     notifyViews();
 
-    return true;
+    return ErrorInfo(ERR_OK, "OK");
 }
 
-bool DummyDataSource::updateContact(Contact::ContactId id, const Contact& c)
+ErrorInfo DummyDataSource::updateContact(Contact::ContactId id, const Contact& c)
 {
     Contact::ContactRecordSet::iterator it;
 
@@ -147,16 +147,16 @@ bool DummyDataSource::updateContact(Contact::ContactId id, const Contact& c)
         
         //Data has changed
         notifyViews();
-        return true;
+        return ErrorInfo(ERR_OK, "OK");
     }
     else
     {
         //no item with that id
-        return false;
+        return ErrorInfo(ERR_CONTACT_NOT_FOUND, "Contact id does not exist!");
     }
 }
 
-bool DummyDataSource::deleteContact(Contact::ContactId id)
+ErrorInfo DummyDataSource::deleteContact(Contact::ContactId id)
 {
     Contact::ContactRecordSet::iterator itemToDeletePosition;
 
@@ -166,21 +166,21 @@ bool DummyDataSource::deleteContact(Contact::ContactId id)
         
         //Data has changed
         notifyViews();
-        return true;
+        return ErrorInfo(ERR_OK, "OK");
     }
     else
     {
         //item does not exist, cannot delete
-        return false;
+        return ErrorInfo(ERR_CONTACT_NOT_FOUND, "Contact id does not exist!");
     }
 }
 
-bool DummyDataSource::deleteAllContacts()
+ErrorInfo DummyDataSource::deleteAllContacts()
 {
     recordList.clear();    
 
     notifyViews();
-    return true;
+    return ErrorInfo(ERR_OK, "OK");
 }
 
 bool DummyDataSource::idExists(Contact::ContactId id, Contact::ContactRecordSet::iterator &pos)

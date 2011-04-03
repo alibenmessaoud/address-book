@@ -29,12 +29,12 @@ class DummyDataSource : public AddressBookModel
         virtual void removeView(AddressBookView *view);
         virtual void notifyViews();
 
-        virtual bool getContact(Contact::ContactId id, Contact &c);
-        virtual bool getAllContacts(Contact::ContactRecordSet &rs);
-        virtual bool addContact(const Contact& c);
-        virtual bool updateContact(Contact::ContactId id, const Contact& c);
-        virtual bool deleteContact(Contact::ContactId id);
-        virtual bool deleteAllContacts();
+        virtual ErrorInfo getContact(Contact::ContactId id, Contact &c);
+        virtual ErrorInfo getAllContacts(Contact::ContactRecordSet &rs);
+        virtual ErrorInfo addContact(const Contact& c);
+        virtual ErrorInfo updateContact(Contact::ContactId id, const Contact& c);
+        virtual ErrorInfo deleteContact(Contact::ContactId id);
+        virtual ErrorInfo deleteAllContacts();
 
         DummyDataSource();  
         ~DummyDataSource() { };

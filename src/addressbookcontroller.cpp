@@ -24,49 +24,32 @@ AddressBookController::~AddressBookController()
 
 ErrorInfo AddressBookController::submitContact(const Contact &c)
 {    
+    
     if(!c.isValidToAdd())
     {
-        return ErrorInfo(ERR_CONTACT_NOT_VALID, "Invalid Contact. Make sure \
-                            all required fields are filled.");
+        return ErrorInfo(ERR_CONTACT_NOT_VALID,
+                        "Invalid Contact. Make sure all required fields are filled.");
     }
 
-    if(dataStore.addContact(c))
-    {
-        return ErrorInfo(ERR_OK, "OK");
-    }
-    else
-    {
-        return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could not add contact.");
-    }
+    return dataStore.addContact(c);
+    
 }
 
 ErrorInfo AddressBookController::deleteContact(const Contact::ContactId id)
 {
-    if(dataStore.deleteContact(id))
-    {
-        return ErrorInfo(ERR_OK, "OK");
-    }
-    else
-    {
-        return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could not delete contact");
-    }
+    return dataStore.deleteContact(id);
+
 }
 
 ErrorInfo AddressBookController::editContact(const Contact::ContactId id, const Contact &c)
 {
     if(!c.isValidToAdd())
     {
-        return ErrorInfo(ERR_CONTACT_NOT_VALID, "Invalid Contact. Make sure \
-        all required fields are filled.");
+        return ErrorInfo(ERR_CONTACT_NOT_VALID, 
+                "Invalid Contact. Make sure all required fields are filled.");
     }
 
-    if(dataStore.updateContact(id, c))
-    {
-        return ErrorInfo(ERR_OK, "OK");
-    }
-    else
-    {
-        return ErrorInfo(ERR_UNKNOWN_ERROR, "Unknown Error. Could not update contact");
-    }
+    return dataStore.updateContact(id, c);
+
 }
 

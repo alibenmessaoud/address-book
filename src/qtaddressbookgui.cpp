@@ -13,6 +13,7 @@
 #include "qtcontactlist.h"
 #include "qtcontactdetailview.h"
 #include "qteditcontactdialog.h"
+#include "qterrordialog.h"
 #include "contact.h"
 
 QtAddressBookGUI::QtAddressBookGUI(AddressBookController &controller, AddressBookModel &model,
@@ -102,70 +103,85 @@ void QtAddressBookGUI::addContact()
     Contact newContact;
     QtAddContactDialog *addDialog = new QtAddContactDialog(newContact, this);
 
-    if(addDialog->exec())
+    while(addDialog->exec())
     {
-        appController.submitContact(newContact);
+        ErrorInfo e = appController.submitContact(newContact);
+
+        if(e.code == ERR_OK)
+        {
+            break;
+        }
+    
+        //display error dialog
+        QtErrorDialog *errDialog = new QtErrorDialog(e.msg, this);
+        errDialog->exec();
+    
     }
 }
 
 void QtAddressBookGUI::editContact()
 {
     Contact::ContactId idToEdit = list->getSelectedContactId();
-
-    if(idToEdit == Contact::INVALID_ID)
-    {
-        return;
-    }
-
     
     Contact editingContact;
-    bool success = dataSource.getContact(idToEdit, editingContact);
+    ErrorInfo getContactErrorStatus = dataSource.getContact(idToEdit, editingContact);
 
-    if(!success)
+    if(getContactErrorStatus.code != ERR_OK)
     {
+        //The id of the Contact user wants to edit doesn't exist
+        //Should never happen since they are selecting it from a list
+        //of existing id
+        //display error dialog
+        QtErrorDialog *errDialog = new QtErrorDialog(getContactErrorStatus.msg, this);
+        errDialog->exec();
         return;
     }
    
     QtEditContactDialog *editDialog = new QtEditContactDialog(editingContact, this);
 
-    if(editDialog->exec())
+    while(editDialog->exec())
     {
-        appController.editContact(idToEdit, editingContact);
+        ErrorInfo editErrorStatus = appController.editContact(idToEdit, editingContact);
+
+        if(editErrorStatus.code == ERR_OK)
+        {
+            break;
+        }
+
+        //display error dialog
+        QtErrorDialog *errDialog = new QtErrorDialog(editErrorStatus.msg, this);
+        errDialog->exec();
     }
-
-
 }
 
 void QtAddressBookGUI::deleteContact()
 {
     Contact::ContactId idToDelete = list->getSelectedContactId();
 
-    if(idToDelete != Contact::INVALID_ID)
+    bool firstRow  = list->currentRow() == 0;
+    bool onlyRowLeft = list->count() == 1;
+    
+    if(!onlyRowLeft)
     {
-        bool firstRow  = list->currentRow() == 0;
-        bool onlyRowLeft = list->count() == 1;
-        
-        if(!onlyRowLeft)
+        if(firstRow)
         {
-            if(firstRow)
-            {
-                list->setCurrentRow(list->currentRow()+1,QItemSelectionModel::SelectCurrent);
-            }
-            else
-            {
-                //It is NOT the only row left AND it is not the first row.
-                //So in this case, selection moves to the previous row.
-                list->setCurrentRow(list->currentRow()-1,QItemSelectionModel::SelectCurrent);
-            }
+            list->setCurrentRow(list->currentRow()+1,QItemSelectionModel::SelectCurrent);
         }
         else
         {
-            //only row left, clear the contact detail view so it doesn't display the last
-            //Contact selected before deletion
-            detailView->clear();
+            //It is NOT the only row left AND it is not the first row.
+            //So in this case, selection moves to the previous row.
+            list->setCurrentRow(list->currentRow()-1,QItemSelectionModel::SelectCurrent);
         }
-        
-            appController.deleteContact(idToDelete);
+    }
+    
+    ErrorInfo deleteErrorStatus = appController.deleteContact(idToDelete);
+    if(deleteErrorStatus.code != ERR_OK)
+    {
+        //display error dialog
+        QtErrorDialog *errDialog = new QtErrorDialog(deleteErrorStatus.msg, this);
+        errDialog->exec();
+        return;
     }
 }
 
