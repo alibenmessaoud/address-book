@@ -3,6 +3,10 @@
 
 #include <sqlite3.h>
 #include <string>
+#include <vector>
+#include "addressbookmodel.h"
+#include "addressbookview.h"
+#include "contact.h"
 
 /***********************************************************************
     Class: SQLiteDataSource
@@ -13,14 +17,37 @@
     AddressBookModel interface.
 ***********************************************************************/
 
-class SQLiteDataSource
+class SQLiteDataSource : public AddressBookModel
 {
     public:
-        SQLiteDataSource(const std::string& filename);
+        SQLiteDataSource(const std::string& filename, bool createDB);
         ~SQLiteDataSource();
 
+        //AddressBookModel interface
+        virtual void registerView(AddressBookView *viewToRegister);
+        virtual void removeView(AddressBookView *viewToRemove);
+        virtual void notifyViews();
+        virtual ErrorInfo getContact(Contact::ContactId id, Contact& c);
+        virtual ErrorInfo getAllContacts(Contact::ContactRecordSet &rs);
+        virtual ErrorInfo addContact(const Contact& c);
+        virtual ErrorInfo updateContact(Contact::ContactId id, const Contact&);
+        virtual ErrorInfo deleteContact(Contact::ContactId id);
+        virtual ErrorInfo deleteAllContacts();
+  
     private:
+        void openDatabase(int openFlags);
+        void createTable();
+
+        bool isViewRegistered(AddressBookView *viewToCheck);
+
+
+        std::string dbFilename;
         sqlite3 *databaseHandle;
+        std::vector<AddressBookView*> observerList;
+        static const std::string tableName;
+
+
+
 
 };
 
