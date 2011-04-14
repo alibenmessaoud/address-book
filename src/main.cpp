@@ -6,6 +6,8 @@
 #include <QApplication>
 
 #include "sqlitedatasource.h"
+#include "errorinfo.h"
+#include "contact.h"
 
 int main(int argc, char *argv[])
 {
@@ -43,6 +45,28 @@ int main(int argc, char *argv[])
         }
 
     }
-    
+
+    Contact c;
+    c.firstName = "A";
+    c.lastName = "A";
+    c.phoneNumber = "A";
+    c.address = "A";
+    c.email = "A";
+
+    ErrorInfo e = myDB->addContact(c);
+
+    if(e.code != ERR_OK)
+    {
+        std::cout << e.msg <<std::endl;
+    }
+
+    Contact x;
+
+    myDB->getContact(1, x);
+
+    std::cout << x.firstName << std::endl;
+    std::cout << x.lastName << std::endl;
+
+    delete myDB;
 }
 

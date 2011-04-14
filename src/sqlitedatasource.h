@@ -44,7 +44,6 @@ class SQLiteDataSource : public AddressBookModel
         std::string dbFilename;
         sqlite3 *databaseHandle;
         std::vector<AddressBookView*> observerList;
-        static const std::string tableName;
 
 
 

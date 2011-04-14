@@ -6,13 +6,12 @@ bool Contact::isValidToAdd() const
     Adding a new contact requires:
     -first name
     -last name
-    -at least one contact method (phone or email)
+    -phone number
     */
 
     bool hasNames = !(firstName.empty() || lastName.empty());
-    bool hasAContact = !(email.empty() && phoneNumber.empty());
 
-    if(hasNames && hasAContact)
+    if(hasNames && !phoneNumber.empty())
     {
         return true;
     }
