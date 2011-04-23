@@ -102,6 +102,7 @@ void QtAddressBookGUI::addContact()
 {
     Contact newContact;
     QtAddContactDialog *addDialog = new QtAddContactDialog(newContact, this);
+    QtErrorDialog *errDialog = new QtErrorDialog("", this);
 
     while(addDialog->exec())
     {
@@ -113,10 +114,18 @@ void QtAddressBookGUI::addContact()
         }
     
         //display error dialog
-        QtErrorDialog *errDialog = new QtErrorDialog(e.msg, this);
+        errDialog->setText(e.msg.c_str());
         errDialog->exec();
     
     }
+    
+    //Delete the dialog objects
+    //Qt only deletes them when the parent is deleted
+    //If I don't delete them manually here, new ones will be made 
+    //every time this function is called and only deleted when the
+    //program is exited.
+    delete addDialog;
+    delete errDialog;
 }
 
 void QtAddressBookGUI::editContact()
@@ -125,6 +134,8 @@ void QtAddressBookGUI::editContact()
     
     Contact editingContact;
     ErrorInfo getContactErrorStatus = dataSource.getContact(idToEdit, editingContact);
+    
+    QtErrorDialog *errDialog = new QtErrorDialog("", this);
 
     if(getContactErrorStatus.code != ERR_OK)
     {
@@ -132,8 +143,14 @@ void QtAddressBookGUI::editContact()
         //Should never happen since they are selecting it from a list
         //of existing id
         //display error dialog
-        QtErrorDialog *errDialog = new QtErrorDialog(getContactErrorStatus.msg, this);
+        errDialog->setText(getContactErrorStatus.msg.c_str());
         errDialog->exec();
+
+        //Qt only automagically deletes child objects when parent is destroyed
+        //If I don't delete this here more and more dialogs will build up everytime
+        //this function is called, only being destroyed when the parent window
+        //(i.e. the application) is terminated.
+        delete errDialog;
         return;
     }
    
@@ -149,9 +166,13 @@ void QtAddressBookGUI::editContact()
         }
 
         //display error dialog
-        QtErrorDialog *errDialog = new QtErrorDialog(editErrorStatus.msg, this);
+        errDialog->setText(editErrorStatus.msg.c_str());
         errDialog->exec();
     }
+
+    //see comment above about manually deleting dialogs after each run 
+    delete errDialog;
+    delete editDialog;
 }
 
 void QtAddressBookGUI::deleteContact()
@@ -181,6 +202,7 @@ void QtAddressBookGUI::deleteContact()
         //display error dialog
         QtErrorDialog *errDialog = new QtErrorDialog(deleteErrorStatus.msg, this);
         errDialog->exec();
+        delete errDialog;
         return;
     }
 }

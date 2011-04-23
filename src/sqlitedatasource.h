@@ -7,6 +7,7 @@
 #include "addressbookmodel.h"
 #include "addressbookview.h"
 #include "contact.h"
+#include "sqliteutils.h"
 
 /***********************************************************************
     Class: SQLiteDataSource
@@ -35,18 +36,14 @@ class SQLiteDataSource : public AddressBookModel
         virtual ErrorInfo deleteAllContacts();
   
     private:
-        void openDatabase(int openFlags);
         void createTable();
+        void fillContactFromRow(sqlite3_stmt *s, Contact &c);
 
         bool isViewRegistered(AddressBookView *viewToCheck);
 
-
         std::string dbFilename;
-        sqlite3 *databaseHandle;
+        SQLiteDBHandle database;
         std::vector<AddressBookView*> observerList;
-
-
-
 
 };
 

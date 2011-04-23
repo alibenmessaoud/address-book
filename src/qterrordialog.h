@@ -17,7 +17,7 @@ class QtErrorDialog : public QMessageBox
     Q_OBJECT
 
     public:
-        QtErrorDialog(std::string &errMsg, QWidget *parent=0);
+        QtErrorDialog(std::string errMsg, QWidget *parent=0);
 };
 
 #endif

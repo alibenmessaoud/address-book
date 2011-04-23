@@ -5,7 +5,7 @@
 #include <QPushButton>
 #include <QLabel>
 
-QtErrorDialog::QtErrorDialog(std::string &errMsg, QWidget *parent) :
+QtErrorDialog::QtErrorDialog(std::string errMsg, QWidget *parent) :
                         QMessageBox(QMessageBox::Warning, "An error occured...", 
                         errMsg.c_str(), QMessageBox::Ok, parent) {} 
 /*

@@ -1,3 +1,5 @@
+#include "sqlitedatasource.h"
+
 #include <algorithm>
 #include <sqlite3.h>
 #include <string>
@@ -6,90 +8,47 @@
 #include "addressbookview.h"
 #include "contact.h"
 #include "errorinfo.h"
-#include "sqlitedatasource.h"
+#include "sqliteutils.h"
 
 
+//Non Member Utility Functions
+
+
+   
 SQLiteDataSource::SQLiteDataSource(const std::string &filename, bool createDB):
-                                    dbFilename(filename)
+                            database(filename,
+                            (createDB ? (SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE) :
+                            SQLITE_OPEN_READWRITE))
 {
-    //Do we want to create a new DB if the specified DB doesn't exist? 
-    int flags = createDB ? (SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE) :
-                            SQLITE_OPEN_READWRITE;
-
-    try
-    {
-        openDatabase(flags);
-
-        if(createDB)
-        {
-            createTable();
-        }
-    }
-    catch(std::runtime_error &e)
-    {
-        sqlite3_close(databaseHandle);
-        throw;
-    }
+    createTable();
 }   
 
 SQLiteDataSource::~SQLiteDataSource()
 {
-    sqlite3_close(databaseHandle);
-}
-
-
-void SQLiteDataSource::openDatabase(int openFlags)
-{
-    
-    int openResult = sqlite3_open_v2(dbFilename.c_str(),
-                                    &databaseHandle,
-                                    openFlags,
-                                    0);
-
-    if(openResult != SQLITE_OK)
-    {
-        std::string errMsg = sqlite3_errmsg(databaseHandle);
-        throw std::runtime_error(errMsg);
-    }        
-        
 }
 
 void SQLiteDataSource::createTable()
 {
     //Prepare the SQLite statement
-    std::string createTableStatementString = "CREATE TABLE Contacts"
-                                            "(id INTEGER PRIMARY KEY,"
-                                            "firstname TEXT NOT NULL,"
-                                            "lastname TEXT NOT NULL,"
-                                            "phonenum TEXT NOT NULL,"
-                                            "address TEXT,"
-                                            "email TEXT);";
+    std::string sqlStr = "CREATE TABLE IF NOT EXISTS Contacts"
+                        "(id INTEGER PRIMARY KEY,"
+                        "firstname TEXT NOT NULL,"
+                        "lastname TEXT NOT NULL,"
+                        "phonenum TEXT NOT NULL,"
+                        "address TEXT,"
+                        "email TEXT);";
 
-    sqlite3_stmt *compiledStatement;
-
-    int result = sqlite3_prepare_v2(databaseHandle, createTableStatementString.c_str(),
-                    -1, &compiledStatement, NULL);
-
-    if(result != SQLITE_OK)
-    {
-        //destroy compiled statement
-        std::string errMsg = sqlite3_errmsg(databaseHandle);
-        sqlite3_finalize(compiledStatement);
-        
-        throw std::runtime_error(errMsg);
-    }
+    SQLiteStatementHandle createTableStatement(sqlStr, database.get());
 
     //Execute the SQLite statement
-    result = sqlite3_step(compiledStatement);
+    int result = sqlite3_step(createTableStatement.get());
 
     if(result != SQLITE_DONE)
     {
-        std::string errMsg = sqlite3_errmsg(databaseHandle);
-        sqlite3_finalize(compiledStatement);
+        std::string errMsg = sqlite3_errmsg(database.get());
         throw std::runtime_error(errMsg);
     }
 
-    sqlite3_finalize(compiledStatement);
  
 }
 
@@ -144,112 +103,178 @@ void SQLiteDataSource::notifyViews()
 
 }
 
+void SQLiteDataSource::fillContactFromRow(sqlite3_stmt *s, Contact& c)
+{
+ 
+    c.id = sqlite3_column_int(s, 0);
+    c.firstName = reinterpret_cast<const char*>(sqlite3_column_text(s, 1));
+    c.lastName = reinterpret_cast<const char*>(sqlite3_column_text(s, 2));
+    c.phoneNumber = reinterpret_cast<const char*>(sqlite3_column_text(s, 3));
+    c.address = reinterpret_cast<const char*>(sqlite3_column_text(s, 4));
+    c.email = reinterpret_cast<const char*>(sqlite3_column_text(s, 5));
+}
+
+
 ErrorInfo SQLiteDataSource::getContact(Contact::ContactId id, Contact& c)
 {
     //create sql prepared statement
-    std::string sqlStatement = "SELECT * FROM Contacts WHERE id=?;"; 
+    std::string sqlStr = "SELECT * FROM Contacts WHERE id=?;"; 
 
-    sqlite3_stmt *preparedStatement;
-
-    int prepareResult = sqlite3_prepare_v2(databaseHandle,
-                                            sqlStatement.c_str(),
-                                            -1,
-                                            &preparedStatement,
-                                            NULL);
-
-    if(prepareResult != SQLITE_OK)
-    {
-        return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not retrieve contact.");
-    }
-
+    SQLiteStatementHandle queryStatement(sqlStr, database.get());
 
     //bind parameters to SQL statement
-    sqlite3_bind_int(preparedStatement, 1, id);
+    sqlite3_bind_int(queryStatement.get(), 1, id);
 
     //execute statement & check result
-    int stepResult = sqlite3_step(preparedStatement);
+    int stepResult = sqlite3_step(queryStatement.get());
     
     if(stepResult != SQLITE_ROW)
     {
-        sqlite3_finalize(preparedStatement);
         return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not retrieve contact.");
     }
 
-    //package column values into Contact object
-    Contact retrieved;
-
-    retrieved.id = sqlite3_column_int(preparedStatement, 0);
-    retrieved.firstName = reinterpret_cast<const char*>(sqlite3_column_text(preparedStatement, 1));
-    retrieved.lastName = reinterpret_cast<const char*>(sqlite3_column_text(preparedStatement, 2));
-    retrieved.phoneNumber = reinterpret_cast<const char*>(sqlite3_column_text(preparedStatement, 3));
-    retrieved.address = reinterpret_cast<const char*>(sqlite3_column_text(preparedStatement, 4));
-    retrieved.email = reinterpret_cast<const char*>(sqlite3_column_text(preparedStatement, 5));
-
-
-    //assign Contact object to OUT parameter
-    c = retrieved;    
-
-    //finalize prepared statement
-    sqlite3_finalize(preparedStatement);
+    //package column values into Out parameter 
+    fillContactFromRow(queryStatement.get(), c);
 
     return ErrorInfo(ERR_OK, "OK");
 }
 
 ErrorInfo SQLiteDataSource::getAllContacts(Contact::ContactRecordSet &rs)
 {
-    return ErrorInfo(ERR_UNKNOWN_ERROR, "Not yet implemented");
+    //create sql prepared statement
+    std::string sqlStr = "SELECT * FROM Contacts;"; 
+
+    SQLiteStatementHandle queryStatement(sqlStr, database.get());
+
+
+    //execute statement & check result
+    int stepResult = sqlite3_step(queryStatement.get());
+    
+    if(stepResult != SQLITE_ROW)
+    {
+        return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not retrieve contacts.");
+    }
+
+    Contact::ContactRecordSet rows;
+
+    while(stepResult == SQLITE_ROW)
+    {
+        Contact temp;
+                
+        //package column values into Out parameter 
+        fillContactFromRow(queryStatement.get(), temp);
+        rows.push_back(temp);
+
+        stepResult = sqlite3_step(queryStatement.get());
+    }
+
+    rs = rows;
+
+    return ErrorInfo(ERR_OK, "OK");
 }
 
 
 ErrorInfo SQLiteDataSource::addContact(const Contact& c)
 {
     //create sql prepared statement
-    std::string insertStatement =   "INSERT INTO Contacts VALUES("
-                                    "NULL,?,?,?,?,?);";
-
-    sqlite3_stmt *compiledStatement;
-
-    int prepareResult = sqlite3_prepare_v2(databaseHandle, insertStatement.c_str(),
-                                    -1, &compiledStatement, NULL);
-
-
-    if(prepareResult != SQLITE_OK)
-    {
-        return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not add contact.");
-    }
+    std::string sqlStr = "INSERT INTO Contacts VALUES("
+                        "NULL,?,?,?,?,?);";
+    
+    SQLiteStatementHandle insertStatement(sqlStr, database.get()); 
 
     //bind contact fields to variables in SQL statement
-    sqlite3_bind_text(compiledStatement, 1, c.firstName.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(compiledStatement, 2, c.lastName.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(compiledStatement, 3, c.phoneNumber.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(compiledStatement, 4, c.address.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(compiledStatement, 5, c.email.c_str(), -1, SQLITE_STATIC);
+    //id is not bound, it is an auto-incrementing key field
+    sqlite3_bind_text(insertStatement.get(), 1, c.firstName.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStatement.get(), 2, c.lastName.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStatement.get(), 3, c.phoneNumber.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStatement.get(), 4, c.address.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStatement.get(), 5, c.email.c_str(), -1, SQLITE_STATIC);
 
     //execute SQL statement & check results
-    int stepResult = sqlite3_step(compiledStatement);
-    sqlite3_finalize(compiledStatement);
+    int stepResult = sqlite3_step(insertStatement.get());
     
     if(stepResult != SQLITE_DONE)
     {
         return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not add contact");
     }
 
+
+    notifyViews();
+
     return ErrorInfo(ERR_OK, "OK");
 }
 
-ErrorInfo SQLiteDataSource::updateContact(Contact::ContactId id, const Contact&)
+ErrorInfo SQLiteDataSource::updateContact(Contact::ContactId id, const Contact& c)
 {
-    return ErrorInfo(ERR_UNKNOWN_ERROR, "Not yet implemented");
+    //create sql prepared statement
+    std::string sqlStr = "UPDATE Contacts SET "
+                         "firstname=?, lastname=?,"
+                         "phonenum=?, address=?,"
+                         "email=? WHERE id=?;"; 
+    
+    SQLiteStatementHandle updateStatement(sqlStr, database.get()); 
+
+    sqlite3_bind_text(updateStatement.get(), 1, c.firstName.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(updateStatement.get(), 2, c.lastName.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(updateStatement.get(), 3, c.phoneNumber.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(updateStatement.get(), 4, c.address.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(updateStatement.get(), 5, c.email.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(updateStatement.get(), 6, id);
+
+    //execute SQL statement & check results
+    int stepResult = sqlite3_step(updateStatement.get());
+    
+    if(stepResult != SQLITE_DONE)
+    {
+        return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not update contact.");
+    }
+
+    notifyViews();
+
+    return ErrorInfo(ERR_OK, "OK");
 }
 
 ErrorInfo SQLiteDataSource::deleteContact(Contact::ContactId id)
 {
-    return ErrorInfo(ERR_UNKNOWN_ERROR, "Not yet implemented");
+
+    //create sql prepared statement
+    std::string sqlStr = "DELETE FROM Contacts WHERE id=?;"; 
+    
+    SQLiteStatementHandle deleteStatement(sqlStr, database.get()); 
+
+    sqlite3_bind_int(deleteStatement.get(), 1, id);
+
+    //execute SQL statement & check results
+    int stepResult = sqlite3_step(deleteStatement.get());
+    
+    if(stepResult != SQLITE_DONE)
+    {
+        return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not delete contact.");
+    }
+
+    notifyViews();
+
+    return ErrorInfo(ERR_OK, "OK");
 }
 
 
 ErrorInfo SQLiteDataSource::deleteAllContacts()
 {
-    return ErrorInfo(ERR_UNKNOWN_ERROR, "Not yet implemented");
+    //create sql prepared statement
+    std::string sqlStr = "DELETE FROM Contacts;"; 
+    
+    SQLiteStatementHandle deleteAllStatement(sqlStr, database.get()); 
+
+    //execute SQL statement & check results
+    int stepResult = sqlite3_step(deleteAllStatement.get());
+    
+    if(stepResult != SQLITE_DONE)
+    {
+        return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not delete contacts.");
+    }
+
+    notifyViews();
+
+    return ErrorInfo(ERR_OK, "OK");
 }
 
